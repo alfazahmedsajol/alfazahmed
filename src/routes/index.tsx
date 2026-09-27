@@ -1,24 +1,313 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { ArrowRight, Award, Cpu, Network, Server, User } from "lucide-react";
 
-// No head() here: the home route inherits title/description/og/twitter from
-// __root.tsx, and ships no og:image so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
+import { Button } from "@/components/ui/button";
+import { BlogCard, ProjectCard, TagChip } from "@/components/site/cards";
+import { NetworkBackdrop } from "@/components/site/network-backdrop";
+import { Reveal } from "@/components/site/reveal";
+import { Container, DemoNotice, SectionHeading } from "@/components/site/section";
+import { blogPosts } from "@/data/blog";
+import { featuredProjects } from "@/data/projects";
+import { services } from "@/data/services";
+import { coreSkills } from "@/data/skills";
+import { certifications } from "@/data/resume";
+import { site, techBadges } from "@/data/site";
+
 export const Route = createFileRoute("/")({
-  component: Index,
+  head: () => ({
+    meta: [
+      { title: "AI-Powered Networking & Automation — Alfaz Ahmed" },
+      {
+        name: "description",
+        content:
+          "Building smarter networks and automating infrastructure. Networking, MikroTik, FTTH, Linux and AI automation work by Alfaz Ahmed.",
+      },
+      { property: "og:title", content: "AI-Powered Networking & Automation — Alfaz Ahmed" },
+      {
+        property: "og:description",
+        content:
+          "Networking, infrastructure, automation and AI-powered solutions built around modern technologies.",
+      },
+    ],
+  }),
+  component: Home,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
-function Index() {
+function Home() {
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
+    <>
+      {/* Hero */}
+      <section className="relative overflow-hidden border-b border-border">
+        <NetworkBackdrop />
+        <Container className="relative py-16 sm:py-24 lg:py-28">
+          <div className="grid items-center gap-12 lg:grid-cols-[1.15fr_0.85fr]">
+            <Reveal>
+              <p className="font-mono text-xs uppercase tracking-[0.22em] text-primary">
+                {site.brand}
+              </p>
+              <p className="mt-2 font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground">
+                {site.byline}
+              </p>
+              <h1 className="mt-6 text-4xl font-semibold leading-[1.1] text-foreground sm:text-5xl lg:text-6xl">
+                Building Smarter Networks.
+                <br />
+                <span className="text-signal">Automating Infrastructure.</span>
+              </h1>
+              <p className="mt-6 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
+                {site.heroSupport}
+              </p>
+              <ul className="mt-8 flex flex-wrap gap-2">
+                {techBadges.map((b) => (
+                  <li key={b}>
+                    <TagChip>{b}</TagChip>
+                  </li>
+                ))}
+              </ul>
+              <div className="mt-9 flex flex-wrap gap-3">
+                <Button asChild size="lg">
+                  <Link to="/projects">View My Projects</Link>
+                </Button>
+                <Button asChild size="lg" variant="outline">
+                  <Link to="/contact">Contact Me</Link>
+                </Button>
+                <Button asChild size="lg" variant="ghost">
+                  <Link to="/blog">Read My Blog</Link>
+                </Button>
+              </div>
+            </Reveal>
+
+            <Reveal delay={120} className="justify-self-center lg:justify-self-end">
+              <div className="panel relative w-64 p-5 sm:w-80">
+                <div className="flex aspect-square items-center justify-center rounded-lg border border-dashed border-border bg-background/60">
+                  <div className="text-center">
+                    <User className="mx-auto h-10 w-10 text-primary" aria-hidden="true" />
+                    <p className="mt-3 font-mono text-[0.7rem] uppercase tracking-[0.18em] text-muted-foreground">
+                      Profile photo
+                    </p>
+                    <p className="mt-1 text-xs text-muted-foreground">Placeholder — add later</p>
+                  </div>
+                </div>
+                <div className="mt-5">
+                  <p className="font-display text-base font-semibold text-foreground">{site.owner}</p>
+                  <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{site.role}</p>
+                </div>
+              </div>
+            </Reveal>
+          </div>
+        </Container>
+      </section>
+
+      {/* About preview */}
+      <section className="border-b border-border py-16 sm:py-20">
+        <Container>
+          <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
+            <SectionHeading
+              eyebrow="About"
+              title="A networking engineer who automates the repetitive parts"
+              description="I work across routing, ISP access networks, fiber delivery and Linux infrastructure — then use scripting, n8n and AI-assisted workflows to remove the manual, repetitive operations that slow teams down. Everything I build gets documented so it can be rebuilt, reviewed and handed over."
+            />
+            <Reveal delay={100} className="grid gap-4 sm:grid-cols-2">
+              {[
+                { icon: Network, title: "Networking", text: "Routing, switching, segmentation and edge security." },
+                { icon: Server, title: "Infrastructure", text: "Linux servers, monitoring and supporting services." },
+                { icon: Cpu, title: "Automation", text: "Python, APIs and n8n workflows for daily operations." },
+                { icon: Award, title: "Learning", text: "Structured certification track with hands-on labs." },
+              ].map((item) => (
+                <div key={item.title} className="panel p-5">
+                  <item.icon className="h-5 w-5 text-primary" aria-hidden="true" />
+                  <h3 className="mt-3 text-sm font-semibold text-foreground">{item.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{item.text}</p>
+                </div>
+              ))}
+            </Reveal>
+          </div>
+          <Reveal className="mt-10">
+            <Button asChild variant="outline">
+              <Link to="/about">
+                Read More <ArrowRight className="ml-1.5 h-4 w-4" aria-hidden="true" />
+              </Link>
+            </Button>
+          </Reveal>
+        </Container>
+      </section>
+
+      {/* Core skills */}
+      <section className="border-b border-border bg-surface/30 py-16 sm:py-20">
+        <Container>
+          <SectionHeading
+            eyebrow="Core skills"
+            title="The technologies I work with every week"
+            description="Each area below has its own breakdown on the skills page."
+          />
+          <Reveal className="mt-10">
+            <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+              {coreSkills.map((s) => (
+                <li
+                  key={s}
+                  className="panel panel-hover flex items-center justify-center px-4 py-5 text-center text-sm font-medium text-foreground"
+                >
+                  {s}
+                </li>
+              ))}
+            </ul>
+          </Reveal>
+          <Reveal className="mt-8">
+            <Button asChild variant="ghost">
+              <Link to="/skills">
+                Explore all skills <ArrowRight className="ml-1.5 h-4 w-4" aria-hidden="true" />
+              </Link>
+            </Button>
+          </Reveal>
+        </Container>
+      </section>
+
+      {/* Featured projects */}
+      <section className="border-b border-border py-16 sm:py-20">
+        <Container>
+          <div className="flex flex-wrap items-end justify-between gap-6">
+            <SectionHeading
+              eyebrow="Projects"
+              title="Featured lab and automation work"
+              description="Documented builds from my own lab environment."
+            />
+            <Reveal delay={80}>
+              <DemoNotice>Demo content — real projects added in a later phase</DemoNotice>
+            </Reveal>
+          </div>
+          <div className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {featuredProjects.map((p, i) => (
+              <Reveal key={p.slug} delay={i * 70} className="relative">
+                <ProjectCard project={p} />
+              </Reveal>
+            ))}
+          </div>
+          <Reveal className="mt-10">
+            <Button asChild variant="outline">
+              <Link to="/projects">
+                View all projects <ArrowRight className="ml-1.5 h-4 w-4" aria-hidden="true" />
+              </Link>
+            </Button>
+          </Reveal>
+        </Container>
+      </section>
+
+      {/* Services */}
+      <section className="border-b border-border bg-surface/30 py-16 sm:py-20">
+        <Container>
+          <SectionHeading
+            eyebrow="Services"
+            title="How I can help"
+            description="From router configuration to automated operations, with documentation included."
+          />
+          <div className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {services.map((s, i) => (
+              <Reveal key={s.slug} delay={i * 60}>
+                <article className="panel panel-hover h-full p-6">
+                  <h3 className="text-base font-semibold text-foreground">{s.title}</h3>
+                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{s.description}</p>
+                  <ul className="mt-5 flex flex-wrap gap-2">
+                    {s.technologies.map((t) => (
+                      <li key={t}>
+                        <TagChip>{t}</TagChip>
+                      </li>
+                    ))}
+                  </ul>
+                </article>
+              </Reveal>
+            ))}
+          </div>
+          <Reveal className="mt-10">
+            <Button asChild variant="outline">
+              <Link to="/services">
+                See service details <ArrowRight className="ml-1.5 h-4 w-4" aria-hidden="true" />
+              </Link>
+            </Button>
+          </Reveal>
+        </Container>
+      </section>
+
+      {/* Blog */}
+      <section className="border-b border-border py-16 sm:py-20">
+        <Container>
+          <SectionHeading
+            eyebrow="Blog"
+            title="Latest technical writing"
+            description="Notes from labs, configuration decisions and automation experiments."
+          />
+          <div className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {blogPosts.slice(0, 3).map((p, i) => (
+              <Reveal key={p.slug} delay={i * 70}>
+                <BlogCard post={p} />
+              </Reveal>
+            ))}
+          </div>
+          <Reveal className="mt-10">
+            <Button asChild variant="outline">
+              <Link to="/blog">
+                Read the blog <ArrowRight className="ml-1.5 h-4 w-4" aria-hidden="true" />
+              </Link>
+            </Button>
+          </Reveal>
+        </Container>
+      </section>
+
+      {/* Certifications */}
+      <section className="border-b border-border bg-surface/30 py-16 sm:py-20">
+        <Container>
+          <div className="flex flex-wrap items-end justify-between gap-6">
+            <SectionHeading
+              eyebrow="Certifications"
+              title="Certification track"
+              description="Study progress, honestly labeled — nothing listed as achieved unless it is."
+            />
+            <Reveal delay={80}>
+              <DemoNotice>Status reflects study intent, not awarded credentials</DemoNotice>
+            </Reveal>
+          </div>
+          <div className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {certifications.slice(0, 3).map((c, i) => (
+              <Reveal key={c.title} delay={i * 70}>
+                <article className="panel panel-hover h-full p-6">
+                  <div className="flex items-center justify-between gap-3">
+                    <span className="font-mono text-[0.68rem] uppercase tracking-[0.18em] text-primary">
+                      {c.status}
+                    </span>
+                    <span className="font-mono text-[0.68rem] text-muted-foreground">{c.year}</span>
+                  </div>
+                  <h3 className="mt-4 text-base font-semibold text-foreground">{c.title}</h3>
+                  <p className="mt-1 text-sm text-muted-foreground">{c.issuer}</p>
+                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{c.description}</p>
+                </article>
+              </Reveal>
+            ))}
+          </div>
+          <Reveal className="mt-10">
+            <Button asChild variant="outline">
+              <Link to="/certifications">
+                All certifications <ArrowRight className="ml-1.5 h-4 w-4" aria-hidden="true" />
+              </Link>
+            </Button>
+          </Reveal>
+        </Container>
+      </section>
+
+      {/* CTA */}
+      <section className="relative overflow-hidden py-20">
+        <NetworkBackdrop className="opacity-60" />
+        <Container className="relative">
+          <Reveal className="panel mx-auto max-w-3xl p-8 text-center sm:p-12">
+            <h2 className="text-2xl font-semibold text-foreground sm:text-3xl">
+              Have a networking or automation project? Let&apos;s build it.
+            </h2>
+            <p className="mt-4 text-sm leading-relaxed text-muted-foreground sm:text-base">
+              Tell me what your network needs to do, and I&apos;ll tell you how I&apos;d approach it.
+            </p>
+            <Button asChild size="lg" className="mt-8">
+              <Link to="/contact">Get In Touch</Link>
+            </Button>
+          </Reveal>
+        </Container>
+      </section>
+    </>
   );
 }
