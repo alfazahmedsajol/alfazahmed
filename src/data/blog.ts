@@ -181,7 +181,7 @@ export const blogPosts: BlogPost[] = [
   },
 ];
 
-export const featuredPost = blogPosts.find((p) => p.featured) ?? blogPosts[0];
+export const featuredPost: BlogPost = blogPosts.find((p) => p.featured) ?? (blogPosts[0] as BlogPost);
 
 export function getPost(slug: string) {
   return blogPosts.find((p) => p.slug === slug);
