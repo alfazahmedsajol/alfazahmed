@@ -41,10 +41,10 @@ export function NetworkBackdrop({ className = "" }: { className?: string }) {
         {links.map(([a, b], i) => (
           <line
             key={i}
-            x1={nodes[a].x}
-            y1={nodes[a].y}
-            x2={nodes[b].x}
-            y2={nodes[b].y}
+            x1={nodes[a]!.x}
+            y1={nodes[a]!.y}
+            x2={nodes[b]!.x}
+            y2={nodes[b]!.y}
             stroke="var(--color-grid)"
             strokeWidth="0.15"
             vectorEffect="non-scaling-stroke"
