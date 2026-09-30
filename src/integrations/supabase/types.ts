@@ -157,37 +157,55 @@ export type Database = {
       certifications: {
         Row: {
           created_at: string
+          credential_id: string | null
           credential_url: string | null
+          description: string | null
+          expires_on: string | null
+          featured: boolean
+          file_url: string | null
           id: string
           image_url: string | null
           issued_on: string | null
           issuer: string | null
           name: string
           published: boolean
+          sort_order: number
           status: string
           updated_at: string
         }
         Insert: {
           created_at?: string
+          credential_id?: string | null
           credential_url?: string | null
+          description?: string | null
+          expires_on?: string | null
+          featured?: boolean
+          file_url?: string | null
           id?: string
           image_url?: string | null
           issued_on?: string | null
           issuer?: string | null
           name: string
           published?: boolean
+          sort_order?: number
           status?: string
           updated_at?: string
         }
         Update: {
           created_at?: string
+          credential_id?: string | null
           credential_url?: string | null
+          description?: string | null
+          expires_on?: string | null
+          featured?: boolean
+          file_url?: string | null
           id?: string
           image_url?: string | null
           issued_on?: string | null
           issuer?: string | null
           name?: string
           published?: boolean
+          sort_order?: number
           status?: string
           updated_at?: string
         }
@@ -198,7 +216,9 @@ export type Database = {
           created_at: string
           degree: string
           description: string | null
+          document_url: string | null
           end_date: string | null
+          field: string | null
           id: string
           institution: string | null
           published: boolean
@@ -210,7 +230,9 @@ export type Database = {
           created_at?: string
           degree: string
           description?: string | null
+          document_url?: string | null
           end_date?: string | null
+          field?: string | null
           id?: string
           institution?: string | null
           published?: boolean
@@ -222,7 +244,9 @@ export type Database = {
           created_at?: string
           degree?: string
           description?: string | null
+          document_url?: string | null
           end_date?: string | null
+          field?: string | null
           id?: string
           institution?: string | null
           published?: boolean
@@ -239,10 +263,12 @@ export type Database = {
           description: string | null
           end_date: string | null
           id: string
+          is_current: boolean
           published: boolean
           role: string
           sort_order: number
           start_date: string | null
+          technologies: string[]
           updated_at: string
         }
         Insert: {
@@ -251,10 +277,12 @@ export type Database = {
           description?: string | null
           end_date?: string | null
           id?: string
+          is_current?: boolean
           published?: boolean
           role: string
           sort_order?: number
           start_date?: string | null
+          technologies?: string[]
           updated_at?: string
         }
         Update: {
@@ -263,10 +291,12 @@ export type Database = {
           description?: string | null
           end_date?: string | null
           id?: string
+          is_current?: boolean
           published?: boolean
           role?: string
           sort_order?: number
           start_date?: string | null
+          technologies?: string[]
           updated_at?: string
         }
         Relationships: []
@@ -437,14 +467,29 @@ export type Database = {
       }
       projects: {
         Row: {
+          architecture: string | null
           category_id: string | null
+          configuration: string | null
           content: string | null
           cover_url: string | null
           created_at: string
+          demo_url: string | null
+          diagram_url: string | null
           featured: boolean
+          github_url: string | null
           id: string
+          implementation: string | null
+          lessons: string | null
+          objective: string | null
+          problem: string | null
+          project_date: string | null
+          project_status: string | null
           published_at: string | null
+          results: string | null
+          seo_description: string | null
+          seo_title: string | null
           slug: string
+          sort_order: number
           status: string
           summary: string | null
           tags: string[]
@@ -452,14 +497,29 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          architecture?: string | null
           category_id?: string | null
+          configuration?: string | null
           content?: string | null
           cover_url?: string | null
           created_at?: string
+          demo_url?: string | null
+          diagram_url?: string | null
           featured?: boolean
+          github_url?: string | null
           id?: string
+          implementation?: string | null
+          lessons?: string | null
+          objective?: string | null
+          problem?: string | null
+          project_date?: string | null
+          project_status?: string | null
           published_at?: string | null
+          results?: string | null
+          seo_description?: string | null
+          seo_title?: string | null
           slug: string
+          sort_order?: number
           status?: string
           summary?: string | null
           tags?: string[]
@@ -467,14 +527,29 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          architecture?: string | null
           category_id?: string | null
+          configuration?: string | null
           content?: string | null
           cover_url?: string | null
           created_at?: string
+          demo_url?: string | null
+          diagram_url?: string | null
           featured?: boolean
+          github_url?: string | null
           id?: string
+          implementation?: string | null
+          lessons?: string | null
+          objective?: string | null
+          problem?: string | null
+          project_date?: string | null
+          project_status?: string | null
           published_at?: string | null
+          results?: string | null
+          seo_description?: string | null
+          seo_title?: string | null
           slug?: string
+          sort_order?: number
           status?: string
           summary?: string | null
           tags?: string[]
@@ -494,31 +569,49 @@ export type Database = {
       services: {
         Row: {
           created_at: string
+          cta: string | null
           description: string | null
+          details: string | null
+          featured: boolean
+          features: string[]
           icon: string | null
           id: string
           published: boolean
+          slug: string | null
           sort_order: number
+          technologies: string[]
           title: string
           updated_at: string
         }
         Insert: {
           created_at?: string
+          cta?: string | null
           description?: string | null
+          details?: string | null
+          featured?: boolean
+          features?: string[]
           icon?: string | null
           id?: string
           published?: boolean
+          slug?: string | null
           sort_order?: number
+          technologies?: string[]
           title: string
           updated_at?: string
         }
         Update: {
           created_at?: string
+          cta?: string | null
           description?: string | null
+          details?: string | null
+          featured?: boolean
+          features?: string[]
           icon?: string | null
           id?: string
           published?: boolean
+          slug?: string | null
           sort_order?: number
+          technologies?: string[]
           title?: string
           updated_at?: string
         }
@@ -556,6 +649,7 @@ export type Database = {
           published: boolean
           slug: string
           sort_order: number
+          summary: string | null
           updated_at: string
         }
         Insert: {
@@ -565,6 +659,7 @@ export type Database = {
           published?: boolean
           slug: string
           sort_order?: number
+          summary?: string | null
           updated_at?: string
         }
         Update: {
@@ -574,6 +669,7 @@ export type Database = {
           published?: boolean
           slug?: string
           sort_order?: number
+          summary?: string | null
           updated_at?: string
         }
         Relationships: []
@@ -582,8 +678,12 @@ export type Database = {
         Row: {
           category_id: string | null
           created_at: string
+          description: string | null
+          featured: boolean
+          icon: string | null
           id: string
           level: number | null
+          level_label: string | null
           name: string
           published: boolean
           sort_order: number
@@ -592,8 +692,12 @@ export type Database = {
         Insert: {
           category_id?: string | null
           created_at?: string
+          description?: string | null
+          featured?: boolean
+          icon?: string | null
           id?: string
           level?: number | null
+          level_label?: string | null
           name: string
           published?: boolean
           sort_order?: number
@@ -602,8 +706,12 @@ export type Database = {
         Update: {
           category_id?: string | null
           created_at?: string
+          description?: string | null
+          featured?: boolean
+          icon?: string | null
           id?: string
           level?: number | null
+          level_label?: string | null
           name?: string
           published?: boolean
           sort_order?: number
