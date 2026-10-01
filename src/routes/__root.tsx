@@ -4,6 +4,7 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
+  useRouterState,
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
@@ -128,16 +129,17 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const isAdmin = useRouterState({ select: (s) => s.location.pathname.startsWith("/admin") });
 
   return (
     <QueryClientProvider client={queryClient}>
       <div className="flex min-h-screen flex-col">
-        <Navbar />
+        {!isAdmin && <Navbar />}
         <main id="main" className="flex-1">
           {/* Required: nested routes render here. */}
           <Outlet />
         </main>
-        <Footer />
+        {!isAdmin && <Footer />}
       </div>
       <Toaster />
     </QueryClientProvider>
