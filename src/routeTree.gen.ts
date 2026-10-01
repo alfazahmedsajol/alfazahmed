@@ -25,6 +25,7 @@ import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as ProjectsIndexRouteImport } from './routes/projects.index'
 import { Route as ProjectsSlugRouteImport } from './routes/projects.$slug'
+import { Route as AuthenticatedAdminSectionRouteImport } from './routes/_authenticated/admin.$section'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -105,6 +106,12 @@ const ProjectsSlugRoute = ProjectsSlugRouteImport.update({
   path: '/projects/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedAdminSectionRoute =
+  AuthenticatedAdminSectionRouteImport.update({
+    id: '/$section',
+    path: '/$section',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -117,11 +124,12 @@ export interface FileRoutesByFullPath {
   '/services': typeof ServicesRoute
   '/skills': typeof SkillsRoute
   '/terms': typeof TermsRoute
-  '/admin': typeof AuthenticatedAdminRoute
+  '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/blog/$slug': typeof BlogSlugRoute
   '/projects/$slug': typeof ProjectsSlugRoute
   '/blog/': typeof BlogIndexRoute
   '/projects/': typeof ProjectsIndexRoute
+  '/admin/$section': typeof AuthenticatedAdminSectionRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -134,11 +142,12 @@ export interface FileRoutesByTo {
   '/services': typeof ServicesRoute
   '/skills': typeof SkillsRoute
   '/terms': typeof TermsRoute
-  '/admin': typeof AuthenticatedAdminRoute
+  '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/blog/$slug': typeof BlogSlugRoute
   '/projects/$slug': typeof ProjectsSlugRoute
   '/blog': typeof BlogIndexRoute
   '/projects': typeof ProjectsIndexRoute
+  '/admin/$section': typeof AuthenticatedAdminSectionRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -153,11 +162,12 @@ export interface FileRoutesById {
   '/services': typeof ServicesRoute
   '/skills': typeof SkillsRoute
   '/terms': typeof TermsRoute
-  '/_authenticated/admin': typeof AuthenticatedAdminRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/blog/$slug': typeof BlogSlugRoute
   '/projects/$slug': typeof ProjectsSlugRoute
   '/blog/': typeof BlogIndexRoute
   '/projects/': typeof ProjectsIndexRoute
+  '/_authenticated/admin/$section': typeof AuthenticatedAdminSectionRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -177,6 +187,7 @@ export interface FileRouteTypes {
     | '/projects/$slug'
     | '/blog/'
     | '/projects/'
+    | '/admin/$section'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -194,6 +205,7 @@ export interface FileRouteTypes {
     | '/projects/$slug'
     | '/blog'
     | '/projects'
+    | '/admin/$section'
   id:
     | '__root__'
     | '/'
@@ -212,6 +224,7 @@ export interface FileRouteTypes {
     | '/projects/$slug'
     | '/blog/'
     | '/projects/'
+    | '/_authenticated/admin/$section'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -346,15 +359,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProjectsSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/admin/$section': {
+      id: '/_authenticated/admin/$section'
+      path: '/$section'
+      fullPath: '/admin/$section'
+      preLoaderRoute: typeof AuthenticatedAdminSectionRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
   }
 }
 
+interface AuthenticatedAdminRouteChildren {
+  AuthenticatedAdminSectionRoute: typeof AuthenticatedAdminSectionRoute
+}
+
+const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
+  AuthenticatedAdminSectionRoute: AuthenticatedAdminSectionRoute,
+}
+
+const AuthenticatedAdminRouteWithChildren =
+  AuthenticatedAdminRoute._addFileChildren(AuthenticatedAdminRouteChildren)
+
 interface AuthenticatedRouteRouteChildren {
-  AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
+  AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
-  AuthenticatedAdminRoute: AuthenticatedAdminRoute,
+  AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
 }
 
 const AuthenticatedRouteRouteWithChildren =
