@@ -73,6 +73,8 @@ export type Database = {
       }
       blog_posts: {
         Row: {
+          author: string | null
+          canonical_url: string | null
           category_id: string | null
           content: string | null
           cover_url: string | null
@@ -80,15 +82,20 @@ export type Database = {
           excerpt: string | null
           featured: boolean
           id: string
+          og_image_url: string | null
           published_at: string | null
+          reading_time: string | null
           seo_description: string | null
           seo_title: string | null
           slug: string
           status: string
+          tags: string[]
           title: string
           updated_at: string
         }
         Insert: {
+          author?: string | null
+          canonical_url?: string | null
           category_id?: string | null
           content?: string | null
           cover_url?: string | null
@@ -96,15 +103,20 @@ export type Database = {
           excerpt?: string | null
           featured?: boolean
           id?: string
+          og_image_url?: string | null
           published_at?: string | null
+          reading_time?: string | null
           seo_description?: string | null
           seo_title?: string | null
           slug: string
           status?: string
+          tags?: string[]
           title: string
           updated_at?: string
         }
         Update: {
+          author?: string | null
+          canonical_url?: string | null
           category_id?: string | null
           content?: string | null
           cover_url?: string | null
@@ -112,11 +124,14 @@ export type Database = {
           excerpt?: string | null
           featured?: boolean
           id?: string
+          og_image_url?: string | null
           published_at?: string | null
+          reading_time?: string | null
           seo_description?: string | null
           seo_title?: string | null
           slug?: string
           status?: string
+          tags?: string[]
           title?: string
           updated_at?: string
         }
@@ -339,6 +354,7 @@ export type Database = {
       }
       messages: {
         Row: {
+          archived: boolean
           body: string
           created_at: string
           email: string
@@ -349,6 +365,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          archived?: boolean
           body: string
           created_at?: string
           email: string
@@ -359,6 +376,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          archived?: boolean
           body?: string
           created_at?: string
           email?: string
