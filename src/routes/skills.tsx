@@ -4,7 +4,8 @@ import { Button } from "@/components/ui/button";
 import { TagChip } from "@/components/site/cards";
 import { Reveal } from "@/components/site/reveal";
 import { Container, DemoNotice, PageHeader } from "@/components/site/section";
-import { skillCategories } from "@/data/skills";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { skillsQuery } from "@/lib/cms";
 
 export const Route = createFileRoute("/skills")({
   head: () => ({
@@ -22,10 +23,12 @@ export const Route = createFileRoute("/skills")({
       },
     ],
   }),
+  loader: ({ context }) => context.queryClient.ensureQueryData(skillsQuery),
   component: Skills,
 });
 
 function Skills() {
+  const { data: skillCategories } = useSuspenseQuery(skillsQuery);
   return (
     <>
       <PageHeader
@@ -45,7 +48,7 @@ function Skills() {
                   href={`#${c.slug}`}
                   className="rounded-full border border-border bg-surface px-3 py-1.5 text-xs text-muted-foreground transition-colors hover:border-primary/50 hover:text-primary"
                 >
-                  {c.title}
+                  {c.name}
                 </a>
               ))}
             </nav>
@@ -55,16 +58,16 @@ function Skills() {
             {skillCategories.map((cat, i) => (
               <Reveal key={cat.slug} delay={(i % 2) * 70}>
                 <section id={cat.slug} className="panel h-full scroll-mt-24 p-7">
-                  <h2 className="text-lg font-semibold text-foreground">{cat.title}</h2>
-                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{cat.summary}</p>
+                  <h2 className="text-lg font-semibold text-foreground">{cat.name}</h2>
+                  {cat.summary && <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{cat.summary}</p>}
                   <ul className="mt-6 space-y-4">
                     {cat.skills.map((s) => (
-                      <li key={s.name} className="border-t border-border pt-4 first:border-0 first:pt-0">
+                      <li key={s.id} className="border-t border-border pt-4 first:border-0 first:pt-0">
                         <div className="flex flex-wrap items-center justify-between gap-2">
                           <span className="text-sm font-medium text-foreground">{s.name}</span>
-                          <TagChip>{s.level}</TagChip>
+                          {s.level_label && <TagChip>{s.level_label}</TagChip>}
                         </div>
-                        <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">{s.note}</p>
+                        <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">{s.description}</p>
                       </li>
                     ))}
                   </ul>

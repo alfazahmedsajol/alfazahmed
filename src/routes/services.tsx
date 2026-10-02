@@ -5,7 +5,8 @@ import { Button } from "@/components/ui/button";
 import { TagChip } from "@/components/site/cards";
 import { Reveal } from "@/components/site/reveal";
 import { Container, PageHeader } from "@/components/site/section";
-import { services, type Service } from "@/data/services";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { servicesQuery } from "@/lib/cms";
 
 export const Route = createFileRoute("/services")({
   head: () => ({
@@ -23,10 +24,11 @@ export const Route = createFileRoute("/services")({
       },
     ],
   }),
+  loader: ({ context }) => context.queryClient.ensureQueryData(servicesQuery),
   component: Services,
 });
 
-const icons: Record<Service["icon"], typeof Router> = {
+const icons: Record<string, typeof Router> = {
   router: Router,
   network: Network,
   fiber: Cable,
@@ -36,6 +38,7 @@ const icons: Record<Service["icon"], typeof Router> = {
 };
 
 function Services() {
+  const { data: services } = useSuspenseQuery(servicesQuery);
   return (
     <>
       <PageHeader
@@ -48,10 +51,10 @@ function Services() {
         <Container>
           <div className="grid gap-6 md:grid-cols-2">
             {services.map((s, i) => {
-              const Icon = icons[s.icon];
+              const Icon = icons[s.icon ?? ""] ?? Network;
               return (
-                <Reveal key={s.slug} delay={(i % 2) * 70}>
-                  <article id={s.slug} className="panel panel-hover flex h-full scroll-mt-24 flex-col p-7">
+                <Reveal key={s.id} delay={(i % 2) * 70}>
+                  <article id={s.slug ?? s.id} className="panel panel-hover flex h-full scroll-mt-24 flex-col p-7">
                     <span className="flex h-11 w-11 items-center justify-center rounded-lg border border-border bg-background/60 text-primary">
                       <Icon className="h-5 w-5" aria-hidden="true" />
                     </span>
@@ -59,6 +62,12 @@ function Services() {
                     <p className="mt-3 flex-1 text-sm leading-relaxed text-muted-foreground">
                       {s.description}
                     </p>
+                    {s.details && <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{s.details}</p>}
+                    {s.features.length > 0 && (
+                      <ul className="mt-4 list-disc space-y-1 pl-5 text-sm text-muted-foreground">
+                        {s.features.map((f) => <li key={f}>{f}</li>)}
+                      </ul>
+                    )}
                     <div className="mt-6">
                       <h3 className="font-mono text-[0.68rem] uppercase tracking-[0.2em] text-muted-foreground">
                         Technologies
@@ -72,7 +81,7 @@ function Services() {
                       </ul>
                     </div>
                     <Button asChild variant="outline" className="mt-6 self-start">
-                      <Link to="/contact">{s.cta}</Link>
+                      <Link to="/contact">{s.cta ?? "Get in touch"}</Link>
                     </Button>
                   </article>
                 </Reveal>
