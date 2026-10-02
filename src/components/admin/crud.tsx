@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import { Markdown } from "@/components/site/markdown";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
@@ -18,7 +19,7 @@ import {
 export type Field = {
   key: string;
   label: string;
-  type: "text" | "textarea" | "code" | "number" | "bool" | "date" | "tags" | "select" | "relation" | "url";
+  type: "text" | "textarea" | "code" | "number" | "bool" | "date" | "tags" | "select" | "relation" | "url" | "markdown" | "datetime";
   required?: boolean;
   options?: string[];
   relation?: string; // table with id,name
@@ -103,9 +104,11 @@ export function CrudPage({ config }: { config: CrudConfig }) {
         if (f.type === "tags") v = Array.isArray(v) ? v : String(v ?? "").split(",").map((s) => s.trim()).filter(Boolean);
         else if (f.type === "number") v = v === "" || v == null ? (f.key === "sort_order" ? 0 : null) : Number(v);
         else if (f.type === "bool") v = !!v;
+        else if (f.type === "datetime") v = v ? new Date(String(v)).toISOString() : null;
         else if (v === "") v = null;
         payload[f.key] = v;
       }
+      if ("reading_time" in payload && !payload["reading_time"] && payload["content"]) payload["reading_time"] = `${Math.max(1, Math.round(String(payload["content"]).split(/\s+/).length / 200))} min read`;
       if (config.slugFrom && !payload.slug) payload.slug = slugify(String(payload[config.slugFrom] ?? ""));
       if (config.publishKey === "status" && payload.status === "published" && !r.published_at) payload.published_at = new Date().toISOString();
       const res = r.id ? await db.from(config.table).update(payload).eq("id", r.id) : await db.from(config.table).insert(payload);
@@ -245,6 +248,7 @@ function EditForm({ config, initial, rels, saving, onSave }: {
     const o: Record<string, unknown> = { ...initial };
     for (const f of config.fields) {
       if (o[f.key] === undefined) o[f.key] = f.type === "bool" ? (f.key === "published") : f.type === "select" ? f.options?.[0] : "";
+      if (f.type === "datetime" && o[f.key]) { const d = new Date(String(o[f.key])); o[f.key] = new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 16); }
       if (f.type === "tags" && Array.isArray(o[f.key])) o[f.key] = (o[f.key] as string[]).join(", ");
     }
     return o;
@@ -268,7 +272,9 @@ function EditForm({ config, initial, rels, saving, onSave }: {
               <div className="flex items-center gap-3"><Switch id={id} checked={!!val} onCheckedChange={(c) => set(f.key, c)} /><Label htmlFor={id}>{f.label}</Label></div>
             ) : (<>
               <Label htmlFor={id}>{f.label}{f.required && " *"}</Label>
-              {f.type === "textarea" || f.type === "code" ? (
+              {f.type === "markdown" ? (
+                <MarkdownField id={id} value={String(val ?? "")} onChange={(t) => set(f.key, t)} />
+              ) : f.type === "textarea" || f.type === "code" ? (
                 <Textarea id={id} rows={f.type === "code" ? 8 : 4} className={f.type === "code" ? "font-mono text-xs" : ""} value={String(val ?? "")} onChange={(e) => set(f.key, e.target.value)} />
               ) : f.type === "select" ? (
                 <select id={id} className={cls} value={String(val ?? "")} onChange={(e) => set(f.key, e.target.value)}>
@@ -280,7 +286,7 @@ function EditForm({ config, initial, rels, saving, onSave }: {
                   {(rels[f.relation!] ?? []).map((o) => <option key={o.id} value={o.id}>{o.name}</option>)}
                 </select>
               ) : (
-                <Input id={id} type={f.type === "number" ? "number" : f.type === "date" ? "date" : f.type === "url" ? "url" : "text"} value={String(val ?? "")} onChange={(e) => set(f.key, e.target.value)} />
+                <Input id={id} type={f.type === "number" ? "number" : f.type === "datetime" ? "datetime-local" : f.type === "date" ? "date" : f.type === "url" ? "url" : "text"} value={String(val ?? "")} onChange={(e) => set(f.key, e.target.value)} />
               )}
             </>)}
             {(f.help || f.type === "tags") && <p className="text-xs text-muted-foreground">{f.help ?? "Separate with commas"}</p>}
@@ -289,5 +295,23 @@ function EditForm({ config, initial, rels, saving, onSave }: {
       })}
       <DialogFooter><Button type="submit" disabled={saving}>{saving ? "Saving…" : "Save"}</Button></DialogFooter>
     </form>
+  );
+}
+
+function MarkdownField({ id, value, onChange }: { id: string; value: string; onChange: (v: string) => void }) {
+  const [preview, setPreview] = useState(false);
+  return (
+    <div>
+      <div className="mb-2 flex gap-2">
+        <Button type="button" size="sm" variant={preview ? "outline" : "default"} onClick={() => setPreview(false)}>Write</Button>
+        <Button type="button" size="sm" variant={preview ? "default" : "outline"} onClick={() => setPreview(true)}>Preview</Button>
+      </div>
+      {preview ? (
+        <div className="max-h-[50vh] overflow-y-auto rounded-md border border-border p-4"><Markdown>{value || "_Nothing to preview yet._"}</Markdown></div>
+      ) : (
+        <Textarea id={id} rows={16} className="font-mono text-xs" value={value} onChange={(e) => onChange(e.target.value)} />
+      )}
+      <p className="mt-1 text-xs text-muted-foreground">Markdown: ## Heading, **bold**, *italic*, - list, [link](https://…), ![image](https://…), ```bash code```, | tables |, &gt; quote. Paste a YouTube link on its own line to embed it.</p>
+    </div>
   );
 }

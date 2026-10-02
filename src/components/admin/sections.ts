@@ -66,6 +66,36 @@ export const sections: Record<string, CrudConfig> = {
       { key: "slug", label: "Slug", type: "text", help: "Leave empty to generate from the name" },
     ],
   },
+  blog: {
+    table: "blog_posts", title: "Blog posts", singular: "Post", orderBy: "created_at", publishKey: "status", featuredKey: "featured", slugFrom: "title",
+    columns: ["title", "category_id", "published_at"],
+    fields: [
+      { key: "title", label: "Title", type: "text", required: true },
+      { key: "slug", label: "Slug", type: "text", help: "URL: /blog/your-slug — leave empty to generate" },
+      { key: "status", label: "Status", type: "select", options: ["draft", "published"] },
+      { key: "published_at", label: "Publish date", type: "datetime", help: "Set a future date to schedule the post" },
+      { key: "category_id", label: "Category", type: "relation", relation: "blog_categories" },
+      { key: "tags", label: "Tags", type: "tags" },
+      { key: "author", label: "Author", type: "text" },
+      { key: "reading_time", label: "Reading time", type: "text", help: "e.g. 6 min read — leave empty to calculate" },
+      { key: "cover_url", label: "Thumbnail / featured image URL", type: "url" },
+      { key: "excerpt", label: "Excerpt", type: "textarea" },
+      { key: "content", label: "Content", type: "markdown" },
+      { key: "seo_title", label: "SEO title", type: "text" },
+      { key: "seo_description", label: "Meta description", type: "textarea" },
+      { key: "canonical_url", label: "Canonical URL", type: "url" },
+      { key: "og_image_url", label: "Open Graph image URL", type: "url" },
+      feat,
+    ],
+  },
+  "blog-categories": {
+    table: "blog_categories", title: "Blog categories", singular: "Category", orderBy: "name", slugFrom: "name",
+    columns: ["name", "slug"],
+    fields: [
+      { key: "name", label: "Name", type: "text", required: true },
+      { key: "slug", label: "Slug", type: "text", help: "Leave empty to generate from the name" },
+    ],
+  },
   services: {
     table: "services", title: "Services", singular: "Service", orderBy: "sort_order", publishKey: "published", featuredKey: "featured", slugFrom: "title",
     columns: ["title", "icon"],
@@ -129,6 +159,7 @@ export const sections: Record<string, CrudConfig> = {
 };
 
 export const nav = [
-  { group: "Content", items: [["projects", "Projects"], ["project-categories", "Project categories"], ["skills", "Skills"], ["skill-categories", "Skill categories"], ["services", "Services"], ["certifications", "Certifications"]] },
+  { group: "Content", items: [["blog", "Blog posts"], ["blog-categories", "Blog categories"], ["projects", "Projects"], ["project-categories", "Project categories"], ["skills", "Skills"], ["skill-categories", "Skill categories"], ["services", "Services"], ["certifications", "Certifications"]] },
+  { group: "Communication", items: [["messages", "Messages"]] },
   { group: "Profile", items: [["experience", "Experience"], ["education", "Education"]] },
 ] as const;

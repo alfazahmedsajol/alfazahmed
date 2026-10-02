@@ -15,6 +15,13 @@
       "when": 1790735487475,
       "tag": "0001_cms_fields",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1790903895755,
+      "tag": "0002_blog_messages_cms",
+      "breakpoints": true
     }
   ]
 }
