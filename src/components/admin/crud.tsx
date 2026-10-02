@@ -37,7 +37,7 @@ export type CrudConfig = {
   slugFrom?: string;
 };
 
-type Row = Record<string, unknown> & { id: string };
+type Row = Record<string, unknown> & { id: string; status?: unknown; published?: unknown; slug?: unknown; published_at?: unknown; sort_order?: any };
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const db = supabase as any;
 const PAGE = 10;
@@ -97,7 +97,7 @@ export function CrudPage({ config }: { config: CrudConfig }) {
 
   const save = useMutation({
     mutationFn: async (r: Partial<Row>) => {
-      const payload: Record<string, unknown> = {};
+      const payload: Record<string, unknown> & { slug?: unknown; status?: unknown; published_at?: unknown } = {};
       for (const f of config.fields) {
         let v = r[f.key];
         if (f.type === "tags") v = Array.isArray(v) ? v : String(v ?? "").split(",").map((s) => s.trim()).filter(Boolean);
@@ -257,7 +257,7 @@ function EditForm({ config, initial, rels, saving, onSave }: {
       e.preventDefault();
       const miss = config.fields.find((f) => f.required && !String(v[f.key] ?? "").trim());
       if (miss) return void toast.error(`${miss.label} is required`);
-      onSave({ ...v, id: initial.id });
+      onSave({ ...v, id: initial.id } as Partial<Row>);
     }}>
       {config.fields.map((f) => {
         const id = `f-${f.key}`;

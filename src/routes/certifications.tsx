@@ -4,7 +4,8 @@ import { BadgeCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Reveal } from "@/components/site/reveal";
 import { Container, DemoNotice, PageHeader } from "@/components/site/section";
-import { certifications } from "@/data/resume";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { certificationsQuery } from "@/lib/cms";
 
 export const Route = createFileRoute("/certifications")({
   head: () => ({
@@ -22,10 +23,12 @@ export const Route = createFileRoute("/certifications")({
       },
     ],
   }),
+  loader: ({ context }) => context.queryClient.ensureQueryData(certificationsQuery),
   component: Certifications,
 });
 
 function Certifications() {
+  const { data: certifications } = useSuspenseQuery(certificationsQuery);
   return (
     <>
       <PageHeader
@@ -42,7 +45,7 @@ function Certifications() {
 
           <div className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
             {certifications.map((c, i) => (
-              <Reveal key={c.title} delay={(i % 3) * 70}>
+              <Reveal key={c.id} delay={(i % 3) * 70}>
                 <article className="panel panel-hover flex h-full flex-col p-6">
                   <div className="flex items-start justify-between gap-3">
                     <span className="flex h-10 w-10 items-center justify-center rounded-lg border border-border bg-background/60 text-primary">
@@ -52,13 +55,16 @@ function Certifications() {
                       {c.status}
                     </span>
                   </div>
-                  <h2 className="mt-5 text-base font-semibold text-foreground">{c.title}</h2>
+                  <h2 className="mt-5 text-base font-semibold text-foreground">{c.name}</h2>
                   <p className="mt-1 text-sm text-muted-foreground">
-                    {c.issuer} · {c.year}
+                    {c.issuer}{c.issued_on ? ` · ${c.issued_on.slice(0, 4)}` : ""}{c.credential_id ? ` · ID ${c.credential_id}` : ""}
                   </p>
                   <p className="mt-3 flex-1 text-sm leading-relaxed text-muted-foreground">
                     {c.description}
                   </p>
+                  {c.credential_url && (
+                    <a href={c.credential_url} target="_blank" rel="noreferrer" className="mt-4 text-sm text-primary hover:underline">View credential</a>
+                  )}
                 </article>
               </Reveal>
             ))}
