@@ -108,6 +108,7 @@ export function CrudPage({ config }: { config: CrudConfig }) {
         else if (v === "") v = null;
         payload[f.key] = v;
       }
+      if ("reading_time" in payload && !payload["reading_time"] && payload["content"]) payload["reading_time"] = `${Math.max(1, Math.round(String(payload["content"]).split(/\s+/).length / 200))} min read`;
       if (config.slugFrom && !payload.slug) payload.slug = slugify(String(payload[config.slugFrom] ?? ""));
       if (config.publishKey === "status" && payload.status === "published" && !r.published_at) payload.published_at = new Date().toISOString();
       const res = r.id ? await db.from(config.table).update(payload).eq("id", r.id) : await db.from(config.table).insert(payload);
