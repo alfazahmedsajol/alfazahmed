@@ -98,7 +98,6 @@ function Contact() {
               <form onSubmit={onSubmit} noValidate className="panel p-7 sm:p-9">
                 <h2 className="text-lg font-semibold text-foreground">Send a message</h2>
                 <div className="mt-3">
-                  <DemoNotice>Form validation is live; delivery is added in the next phase</DemoNotice>
                 </div>
 
                 <div className="mt-8 grid gap-5 sm:grid-cols-2">
@@ -160,9 +159,9 @@ function Contact() {
                   </div>
                 </div>
 
-                <Button type="submit" size="lg" className="mt-8">
+                <Button type="submit" size="lg" className="mt-8" disabled={sending}>
                   <Send className="mr-2 h-4 w-4" aria-hidden="true" />
-                  Send message
+                  {sending ? "Sending…" : "Send message"}
                 </Button>
               </form>
             </Reveal>
