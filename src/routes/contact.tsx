@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Mail, Phone, Send } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -53,7 +54,8 @@ function Contact() {
     setErrors((prev) => ({ ...prev, [key]: undefined }));
   };
 
-  const onSubmit = (e: React.FormEvent) => {
+  const [sending, setSending] = useState(false);
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const found = validate(values);
     setErrors(found);
@@ -61,7 +63,16 @@ function Contact() {
       toast.error("Please fix the highlighted fields.");
       return;
     }
-    toast.success("Message validated. Sending is enabled in the next phase — please email me directly for now.");
+    setSending(true);
+    const { error } = await supabase.from("messages").insert({
+      name: values.name.trim(), email: values.email.trim(), subject: values.subject.trim(), body: values.message.trim(),
+    });
+    setSending(false);
+    if (error) {
+      toast.error("Your message couldn't be sent. Please try again or email me directly.");
+      return;
+    }
+    toast.success("Thanks — your message was sent. I'll reply by email.");
     setValues({ name: "", email: "", subject: "", message: "" });
   };
 
@@ -87,7 +98,6 @@ function Contact() {
               <form onSubmit={onSubmit} noValidate className="panel p-7 sm:p-9">
                 <h2 className="text-lg font-semibold text-foreground">Send a message</h2>
                 <div className="mt-3">
-                  <DemoNotice>Form validation is live; delivery is added in the next phase</DemoNotice>
                 </div>
 
                 <div className="mt-8 grid gap-5 sm:grid-cols-2">
@@ -149,9 +159,9 @@ function Contact() {
                   </div>
                 </div>
 
-                <Button type="submit" size="lg" className="mt-8">
+                <Button type="submit" size="lg" className="mt-8" disabled={sending}>
                   <Send className="mr-2 h-4 w-4" aria-hidden="true" />
-                  Send message
+                  {sending ? "Sending…" : "Send message"}
                 </Button>
               </form>
             </Reveal>

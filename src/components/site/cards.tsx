@@ -49,7 +49,7 @@ export function ProjectCard({ project }: { project: Project }) {
   );
 }
 
-export function BlogCard({ post }: { post: BlogPost }) {
+export function BlogCard({ post }: { post: Pick<BlogPost, "slug" | "title" | "category" | "date" | "excerpt" | "tags" | "readingTime"> }) {
   return (
     <article className="panel panel-hover group relative flex h-full flex-col p-6">
       <div className="flex flex-wrap items-center gap-3">

@@ -7,7 +7,9 @@ import { Input } from "@/components/ui/input";
 import { BlogCard, TagChip } from "@/components/site/cards";
 import { Reveal } from "@/components/site/reveal";
 import { Container, PageHeader, SectionHeading } from "@/components/site/section";
-import { blogCategories, blogPosts, featuredPost, formatDate } from "@/data/blog";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { formatDate } from "@/data/blog";
+import { blogListQuery } from "@/lib/cms";
 import { cn } from "@/lib/utils";
 
 const PER_PAGE = 4;
@@ -22,21 +24,29 @@ export const Route = createFileRoute("/blog/")({
           "Technical writing on RouterOS firewalls, PPPoE access networks, Linux monitoring, Python automation and AI-assisted network operations.",
       },
       { property: "og:title", content: "Blog — Networking & Automation Notes" },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       {
         property: "og:description",
         content: "Lab notes, configuration decisions and automation experiments.",
       },
     ],
+    links: [{ rel: "canonical", href: "/blog" }],
   }),
+  loader: ({ context }) => context.queryClient.ensureQueryData(blogListQuery),
   component: Blog,
 });
 
 function Blog() {
+  const { data } = useSuspenseQuery(blogListQuery);
+  const blogPosts = data.posts;
+  const blogCategories = data.categories;
+  const featuredPost = blogPosts.find((p) => p.featured) ?? blogPosts[0];
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("All");
   const [page, setPage] = useState(1);
 
-  const rest = blogPosts.filter((p) => p.slug !== featuredPost.slug);
+  const rest = blogPosts.filter((p) => p.slug !== featuredPost?.slug);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -50,7 +60,7 @@ function Blog() {
       return matchesCategory && matchesQuery;
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [query, category]);
+  }, [query, category, data]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PER_PAGE));
   const current = Math.min(page, totalPages);
@@ -66,9 +76,10 @@ function Blog() {
         description="Practical writing about network configuration, fiber access, Linux infrastructure and automation — the things I'd want to read while solving the same problem."
       />
 
+      {featuredPost && (
       <section className="border-b border-border py-14 sm:py-20">
         <Container>
-          <SectionHeading eyebrow="Featured" title="Latest featured article" />
+          <SectionHeading eyebrow="Featured" title="Featured article" />
           <Reveal className="panel panel-hover relative mt-8 grid gap-8 p-8 lg:grid-cols-[1.3fr_0.7fr] sm:p-10">
             <div>
               <div className="flex flex-wrap items-center gap-3">
@@ -106,6 +117,7 @@ function Blog() {
           </Reveal>
         </Container>
       </section>
+      )}
 
       <section className="py-14 sm:py-20">
         <Container>
