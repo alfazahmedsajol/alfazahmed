@@ -72,3 +72,63 @@ export const blogPostQuery = (slug: string) =>
       return data ? toPost(data) : null;
     },
   });
+
+export type PublicProject = {
+  id: string; slug: string; title: string; category: string; summary: string; featured: boolean; year: string;
+  stack: string[]; status: string | null; cover: string | null; diagram: string | null; github: string | null; demo: string | null;
+  problem: string | null; objective: string | null; architecture: string | null; implementation: string | null;
+  configuration: string | null; results: string | null; lessons: string | null; content: string | null;
+  seoTitle: string | null; seoDescription: string | null;
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function toProject(r: any): PublicProject {
+  return {
+    id: r.id, slug: r.slug, title: r.title, category: r.project_categories?.name ?? "General", summary: r.summary ?? "",
+    featured: r.featured, year: (r.project_date ?? r.published_at ?? r.created_at ?? "").slice(0, 4), stack: r.tags ?? [],
+    status: r.project_status, cover: r.cover_url, diagram: r.diagram_url, github: r.github_url, demo: r.demo_url,
+    problem: r.problem, objective: r.objective, architecture: r.architecture, implementation: r.implementation,
+    configuration: r.configuration, results: r.results, lessons: r.lessons, content: r.content,
+    seoTitle: r.seo_title, seoDescription: r.seo_description,
+  };
+}
+
+const PROJECT_COLS = "*, project_categories(name)";
+
+export const projectsQuery = queryOptions({
+  queryKey: ["public", "projects"],
+  queryFn: async () => {
+    const [{ data, error }, { data: cats, error: e2 }] = await Promise.all([
+      supabase.from("projects").select(PROJECT_COLS).eq("status", "published").order("sort_order"),
+      supabase.from("project_categories").select("name").order("name"),
+    ]);
+    if (error || e2) throw error ?? e2;
+    return { projects: (data ?? []).map(toProject), categories: (cats ?? []).map((c) => c.name) };
+  },
+});
+
+export const projectQuery = (slug: string) =>
+  queryOptions({
+    queryKey: ["public", "projects", slug],
+    queryFn: async () => {
+      const { data, error } = await supabase.from("projects").select(PROJECT_COLS).eq("slug", slug).eq("status", "published").maybeSingle();
+      if (error) throw error;
+      return data ? toProject(data) : null;
+    },
+  });
+
+export type SiteSettings = { general: Record<string, string>; seo: Record<string, string>; socials: { platform: string; url: string }[] };
+
+export const settingsQuery = queryOptions({
+  queryKey: ["public", "settings"],
+  queryFn: async (): Promise<SiteSettings> => {
+    const [{ data, error }, { data: soc, error: e2 }] = await Promise.all([
+      supabase.from("site_settings").select("key,value").in("key", ["general", "seo"]),
+      supabase.from("social_links").select("platform,url").eq("published", true).order("sort_order"),
+    ]);
+    if (error || e2) throw error ?? e2;
+    const get = (k: string) => (data?.find((d) => d.key === k)?.value ?? {}) as Record<string, string>;
+    return { general: get("general"), seo: get("seo"), socials: soc ?? [] };
+  },
+  staleTime: 5 * 60_000,
+});

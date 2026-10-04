@@ -10,6 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Markdown } from "@/components/site/markdown";
+import { uploadMedia } from "@/lib/media";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
@@ -24,6 +25,7 @@ export type Field = {
   options?: string[];
   relation?: string; // table with id,name
   help?: string;
+  upload?: string; // media folder; shows an upload button on url fields
 };
 
 export type CrudConfig = {
@@ -285,6 +287,8 @@ function EditForm({ config, initial, rels, saving, onSave }: {
                   <option value="">— None —</option>
                   {(rels[f.relation!] ?? []).map((o) => <option key={o.id} value={o.id}>{o.name}</option>)}
                 </select>
+              ) : f.upload ? (
+                <UploadInput id={id} folder={f.upload} value={String(val ?? "")} onChange={(v) => set(f.key, v)} />
               ) : (
                 <Input id={id} type={f.type === "number" ? "number" : f.type === "datetime" ? "datetime-local" : f.type === "date" ? "date" : f.type === "url" ? "url" : "text"} value={String(val ?? "")} onChange={(e) => set(f.key, e.target.value)} />
               )}
@@ -312,6 +316,27 @@ function MarkdownField({ id, value, onChange }: { id: string; value: string; onC
         <Textarea id={id} rows={16} className="font-mono text-xs" value={value} onChange={(e) => onChange(e.target.value)} />
       )}
       <p className="mt-1 text-xs text-muted-foreground">Markdown: ## Heading, **bold**, *italic*, - list, [link](https://…), ![image](https://…), ```bash code```, | tables |, &gt; quote. Paste a YouTube link on its own line to embed it.</p>
+    </div>
+  );
+}
+
+function UploadInput({ id, folder, value, onChange }: { id: string; folder: string; value: string; onChange: (v: string) => void }) {
+  const [busy, setBusy] = useState(false);
+  return (
+    <div className="flex gap-2">
+      <Input id={id} value={value} onChange={(e) => onChange(e.target.value)} placeholder="Paste a link or upload" />
+      <label className="inline-flex shrink-0 cursor-pointer items-center rounded-md border border-border px-3 text-sm hover:bg-surface focus-within:ring-2 focus-within:ring-ring">
+        {busy ? "Uploading…" : "Upload"}
+        <input type="file" className="sr-only" accept="image/jpeg,image/png,image/webp,image/gif,application/pdf" disabled={busy}
+          onChange={async (e) => {
+            const file = e.target.files?.[0]; e.target.value = "";
+            if (!file) return;
+            setBusy(true);
+            try { onChange(await uploadMedia(file, folder)); toast.success("File uploaded"); }
+            catch (err) { toast.error(err instanceof Error ? err.message : "Upload failed"); }
+            finally { setBusy(false); }
+          }} />
+      </label>
     </div>
   );
 }

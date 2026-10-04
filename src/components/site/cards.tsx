@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { ArrowUpRight, Clock } from "lucide-react";
 
 import type { Project } from "@/data/projects";
+type CardProject = Pick<Project, "slug" | "title" | "summary" | "year" | "stack"> & { category: string };
 import { formatDate, type BlogPost } from "@/data/blog";
 
 export function TagChip({ children }: { children: React.ReactNode }) {
@@ -12,7 +13,7 @@ export function TagChip({ children }: { children: React.ReactNode }) {
   );
 }
 
-export function ProjectCard({ project }: { project: Project }) {
+export function ProjectCard({ project }: { project: CardProject }) {
   return (
     <article className="panel panel-hover group flex h-full flex-col p-6">
       <div className="flex items-center justify-between gap-3">
