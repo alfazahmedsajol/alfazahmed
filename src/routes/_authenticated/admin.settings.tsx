@@ -65,7 +65,7 @@ function Group({ settingKey, title, fields }: { settingKey: string; title: strin
     const clean = Object.fromEntries(Object.entries(v).map(([k, x]) => [k, String(x ?? "").trim().slice(0, 2000)]));
     const { error } = await supabase.from("site_settings").upsert({ key: settingKey, value: clean as Json }, { onConflict: "key" });
     setBusy(false);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     toast.success(`${title} saved`);
     qc.invalidateQueries({ queryKey: ["admin", "settings"] });
     qc.invalidateQueries({ queryKey: ["public", "settings"] });
@@ -108,14 +108,14 @@ function SocialLinks() {
 
   async function add(e: React.FormEvent) {
     e.preventDefault();
-    if (!/^https?:\/\//i.test(url)) return toast.error("Link must start with https://");
+    if (!/^https?:\/\//i.test(url)) { toast.error("Link must start with https://"); return; }
     const { error } = await supabase.from("social_links").insert({ platform: platform.trim().slice(0, 40), url: url.trim(), sort_order: q.data?.length ?? 0 });
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     setPlatform(""); setUrl(""); refresh();
   }
   async function remove(id: string) {
     const { error } = await supabase.from("social_links").delete().eq("id", id);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     refresh();
   }
 

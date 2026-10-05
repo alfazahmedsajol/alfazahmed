@@ -7,7 +7,8 @@ import { NetworkBackdrop } from "@/components/site/network-backdrop";
 import { Reveal } from "@/components/site/reveal";
 import { Container, DemoNotice, SectionHeading } from "@/components/site/section";
 import { blogPosts } from "@/data/blog";
-import { featuredProjects } from "@/data/projects";
+import { useQuery } from "@tanstack/react-query";
+import { projectsQuery } from "@/lib/cms";
 import { services } from "@/data/services";
 import { coreSkills } from "@/data/skills";
 import { certifications } from "@/data/resume";
@@ -34,6 +35,8 @@ export const Route = createFileRoute("/")({
 });
 
 function Home() {
+  const { data: proj } = useQuery(projectsQuery);
+  const featuredProjects = (proj?.projects ?? []).filter((p) => p.featured).slice(0, 6);
   return (
     <>
       {/* Hero */}
@@ -171,7 +174,7 @@ function Home() {
               description="Documented builds from my own lab environment."
             />
             <Reveal delay={80}>
-              <DemoNotice>Demo content — real projects added in a later phase</DemoNotice>
+              <DemoNotice>Lab and study builds — managed from the admin panel</DemoNotice>
             </Reveal>
           </div>
           <div className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">

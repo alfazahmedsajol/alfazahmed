@@ -9,8 +9,8 @@ export const Route = createFileRoute("/api/public/media/$")({
       GET: async ({ params }) => {
         const path = decodeURIComponent(params._splat ?? "");
         if (!path || path.includes("..")) return new Response("Not found", { status: 404 });
-        const key = process.env.SUPABASE_PUBLISHABLE_KEY!;
-        const sb = createClient(process.env.SUPABASE_URL!, key, {
+        const key = process.env['SUPABASE_PUBLISHABLE_KEY']!;
+        const sb = createClient(process.env['SUPABASE_URL']!, key, {
           auth: { persistSession: false, autoRefreshToken: false, storage: undefined },
           global: {
             fetch: (input, init) => {

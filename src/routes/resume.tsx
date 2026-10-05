@@ -7,7 +7,8 @@ import { TagChip } from "@/components/site/cards";
 import { Reveal } from "@/components/site/reveal";
 import { Container, DemoNotice, PageHeader } from "@/components/site/section";
 import { certifications, education, experience, resumeSummary } from "@/data/resume";
-import { projects } from "@/data/projects";
+import { useQuery } from "@tanstack/react-query";
+import { projectsQuery } from "@/lib/cms";
 import { skillCategories } from "@/data/skills";
 import { site } from "@/data/site";
 
@@ -40,6 +41,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 }
 
 function Resume() {
+  const projQ = useQuery(projectsQuery);
   return (
     <>
       <PageHeader
@@ -129,7 +131,7 @@ function Resume() {
 
             <Section title="Projects">
               <ul className="grid gap-4 sm:grid-cols-2">
-                {projects.slice(0, 4).map((p) => (
+                {(projQ.data?.projects ?? []).slice(0, 4).map((p) => (
                   <li key={p.slug}>
                     <Link
                       to="/projects/$slug"
