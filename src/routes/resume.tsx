@@ -41,6 +41,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 }
 
 function Resume() {
+  const projQ = useQuery(projectsQuery);
   return (
     <>
       <PageHeader
