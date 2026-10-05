@@ -5,8 +5,9 @@ import { useMemo, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { ProjectCard } from "@/components/site/cards";
 import { Reveal } from "@/components/site/reveal";
-import { Container, DemoNotice, PageHeader, SectionHeading } from "@/components/site/section";
-import { featuredProjects, projectCategories, projects } from "@/data/projects";
+import { Container, PageHeader, SectionHeading } from "@/components/site/section";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { projectsQuery } from "@/lib/cms";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/projects/")({
@@ -23,14 +24,23 @@ export const Route = createFileRoute("/projects/")({
         property: "og:description",
         content: "Lab builds and automation work, each with objectives, approach and outcome.",
       },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
+    links: [{ rel: "canonical", href: "/projects" }],
   }),
+  loader: ({ context }) => context.queryClient.ensureQueryData(projectsQuery),
   component: Projects,
 });
 
 function Projects() {
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState<string>("All");
+  const [page, setPage] = useState(1);
+  const { data } = useSuspenseQuery(projectsQuery);
+  const projects = data.projects;
+  const projectCategories = data.categories;
+  const featuredProjects = projects.filter((p) => p.featured);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -43,7 +53,10 @@ function Projects() {
         p.stack.some((s) => s.toLowerCase().includes(q));
       return matchesCategory && matchesQuery;
     });
-  }, [query, category]);
+  }, [query, category, projects]);
+  const PER = 9;
+  const pages = Math.max(1, Math.ceil(filtered.length / PER));
+  const shown = filtered.slice((Math.min(page, pages) - 1) * PER, Math.min(page, pages) * PER);
 
   return (
     <>
@@ -55,9 +68,6 @@ function Projects() {
 
       <section className="py-14 sm:py-20">
         <Container>
-          <Reveal>
-            <DemoNotice>Demo lab projects — real client work added in a later phase</DemoNotice>
-          </Reveal>
 
           <SectionHeading eyebrow="Featured" title="Highlighted work" className="mt-10" />
           <div className="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
@@ -81,7 +91,7 @@ function Projects() {
                 id="project-search"
                 type="search"
                 value={query}
-                onChange={(e) => setQuery(e.target.value)}
+                onChange={(e) => { setQuery(e.target.value); setPage(1); }}
                 placeholder="Search by title or technology"
                 className="pl-9"
               />
@@ -96,7 +106,7 @@ function Projects() {
                   key={c}
                   type="button"
                   aria-pressed={category === c}
-                  onClick={() => setCategory(c)}
+                  onClick={() => { setCategory(c); setPage(1); }}
                   className={cn(
                     "rounded-full border px-4 py-1.5 text-sm transition-colors",
                     category === c
@@ -116,13 +126,22 @@ function Projects() {
 
           {filtered.length > 0 ? (
             <div className="mt-6 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-              {filtered.map((p, i) => (
+              {shown.map((p, i) => (
                 <Reveal key={p.slug} delay={(i % 3) * 60} className="relative">
                   <ProjectCard project={p} />
                 </Reveal>
               ))}
             </div>
-          ) : (
+          ) : null}
+          {pages > 1 && (
+            <nav aria-label="Projects pagination" className="mt-8 flex items-center justify-center gap-2">
+              {Array.from({ length: pages }, (_, i) => i + 1).map((n) => (
+                <button key={n} type="button" aria-current={n === page ? "page" : undefined} onClick={() => setPage(n)}
+                  className={cn("h-9 min-w-9 rounded-md border px-3 text-sm", n === page ? "border-primary/60 bg-primary/10 text-primary" : "border-border text-muted-foreground hover:text-foreground")}>{n}</button>
+              ))}
+            </nav>
+          )}
+          {filtered.length === 0 && (
             <div className="panel mt-6 p-10 text-center">
               <p className="text-sm text-muted-foreground">
                 No projects match that search. Try a different term or clear the filters.
