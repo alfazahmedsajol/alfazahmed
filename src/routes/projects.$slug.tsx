@@ -58,7 +58,7 @@ function Block({ title, text }: { title: string; text: string | null }) {
   return (
     <section>
       <h2 className="text-xl font-semibold text-foreground">{title}</h2>
-      <div className="prose-tech mt-4"><Markdown content={text} /></div>
+      <div className="prose-tech mt-4"><Markdown>{text}</Markdown></div>
     </section>
   );
 }
@@ -105,7 +105,7 @@ function ProjectDetail() {
           {project.configuration?.trim() && (
             <section>
               <h2 className="text-xl font-semibold text-foreground">Configuration / workflow</h2>
-              <div className="prose-tech mt-4"><Markdown content={"```\n" + project.configuration + "\n```"} /></div>
+              <div className="prose-tech mt-4"><Markdown>{"```\n" + project.configuration + "\n```"}</Markdown></div>
             </section>
           )}
           <Block title="Results" text={project.results} />

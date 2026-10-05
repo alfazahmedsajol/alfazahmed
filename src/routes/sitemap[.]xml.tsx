@@ -8,8 +8,8 @@ export const Route = createFileRoute("/sitemap.xml")({
     handlers: {
       GET: async ({ request }) => {
         const origin = new URL(request.url).origin;
-        const key = process.env.SUPABASE_PUBLISHABLE_KEY!;
-        const sb = createClient(process.env.SUPABASE_URL!, key, {
+        const key = process.env['SUPABASE_PUBLISHABLE_KEY']!;
+        const sb = createClient(process.env['SUPABASE_URL']!, key, {
           auth: { persistSession: false, autoRefreshToken: false, storage: undefined },
           global: { fetch: (i, init) => { const h = new Headers(init?.headers); if (h.get("Authorization") === `Bearer ${key}`) h.delete("Authorization"); h.set("apikey", key); return fetch(i, { ...init, headers: h }); } },
         });
