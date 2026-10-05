@@ -1,10 +1,10 @@
 # Roadmap
-- [x] Admin CRUD: skills, projects, services, certifications, experience, education (+ categories)
-- [x] Public Skills, Services, Certifications from database
-- [x] Blog CMS (markdown editor + preview, schedule, SEO fields) and public blog from database (TOC, share, related)
-- [x] Contact form saves to database; Admin → Messages (read/unread/archive/delete)
-- [ ] Seed project categories + move demo projects to database; public Projects from database (case study, filters, pagination)
-- [ ] File uploads (images, diagrams, PDFs)
-- [ ] Home featured sections, About/Resume from database
-- [ ] SEO: canonical/structured data on remaining pages; sitemap once the site has a public address (blocked: not published)
-- [ ] Media library, site/SEO settings admin
+- [x] Admin CRUD for all content, blog CMS, messages, contact form
+- [x] Projects in database; public Projects/Home/Resume read from it (case study, filters, pagination)
+- [x] File uploads (private bucket, admin-only write, public read proxy) + Media library
+- [x] Site & SEO settings + social links admin
+- [x] Sitemap, robots rules, project SEO/structured data
+- [x] Security hardening (function grants, RLS verified)
+- [ ] Public pages read Site settings (hero/footer/social) — currently from site.ts
+- [ ] About/Resume experience & education from database
+- [ ] Owner account sign-up + signed-in admin test (needs user)
