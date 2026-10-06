@@ -7,7 +7,7 @@ export const Route = createFileRoute("/sitemap.xml")({
   server: {
     handlers: {
       GET: async ({ request }) => {
-        const origin = new URL(request.url).origin;
+        const origin = "https://alfazahmedsajol.lovable.app";
         const key = process.env['SUPABASE_PUBLISHABLE_KEY']!;
         const sb = createClient(process.env['SUPABASE_URL']!, key, {
           auth: { persistSession: false, autoRefreshToken: false, storage: undefined },

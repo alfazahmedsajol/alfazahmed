@@ -30,6 +30,7 @@ export const Route = createFileRoute("/")({
           "Networking, infrastructure, automation and AI-powered solutions built around modern technologies.",
       },
     ],
+    links: [{ rel: "canonical", href: "https://alfazahmedsajol.lovable.app/" }],
   }),
   component: Home,
 });

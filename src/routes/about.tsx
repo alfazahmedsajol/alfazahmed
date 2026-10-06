@@ -20,6 +20,7 @@ export const Route = createFileRoute("/about")({
         content: "Focus areas, technical interests, career vision and working philosophy.",
       },
     ],
+    links: [{ rel: "canonical", href: "https://alfazahmedsajol.lovable.app/about" }],
   }),
   component: About,
 });
