@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 
 import { Button } from "@/components/ui/button";
 import { Reveal } from "@/components/site/reveal";
-import { Container, DemoNotice, PageHeader, SectionHeading } from "@/components/site/section";
+import { Container, PageHeader, SectionHeading } from "@/components/site/section";
 import { timeline } from "@/data/resume";
 
 export const Route = createFileRoute("/about")({
@@ -73,11 +73,6 @@ function About() {
             title="A professional introduction"
             description="Most of my work starts the same way: understand what the network needs to deliver, write down the plan, then build it in a way that can be rebuilt. I care about configurations that another engineer can read, monitoring that supports real decisions, and automation that quietly removes daily toil."
           />
-          <div className="mt-6">
-            <Reveal>
-              <DemoNotice>Placeholder narrative — refine as your experience grows</DemoNotice>
-            </Reveal>
-          </div>
 
           <div className="mt-12 grid gap-6 md:grid-cols-2">
             {sections.map((s, i) => (

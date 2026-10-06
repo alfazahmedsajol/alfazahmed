@@ -7,16 +7,18 @@ export const Route = createFileRoute("/sitemap.xml")({
   server: {
     handlers: {
       GET: async ({ request }) => {
-        const origin = "https://alfazahmedsajol.lovable.app";
         const key = process.env['SUPABASE_PUBLISHABLE_KEY']!;
         const sb = createClient(process.env['SUPABASE_URL']!, key, {
           auth: { persistSession: false, autoRefreshToken: false, storage: undefined },
           global: { fetch: (i, init) => { const h = new Headers(init?.headers); if (h.get("Authorization") === `Bearer ${key}`) h.delete("Authorization"); h.set("apikey", key); return fetch(i, { ...init, headers: h }); } },
         });
-        const [posts, projects] = await Promise.all([
+        const [posts, projects, seo] = await Promise.all([
           sb.from("blog_posts").select("slug,updated_at"),
           sb.from("projects").select("slug,updated_at").eq("status", "published"),
+          sb.from("site_settings").select("value").eq("key", "seo").maybeSingle(),
         ]);
+        const configured = ((seo.data?.value as Record<string, string> | null)?.["site_url"] ?? "").trim().replace(/\/+$/, "");
+        const origin = /^https?:\/\//.test(configured) ? configured : new URL(request.url).origin;
         const urls = [
           ...STATIC.map((p) => ({ loc: p, lastmod: undefined as string | undefined })),
           ...(projects.data ?? []).map((r) => ({ loc: `/projects/${r.slug}`, lastmod: r.updated_at })),

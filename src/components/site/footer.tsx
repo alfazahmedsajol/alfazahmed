@@ -1,11 +1,16 @@
 import { Link } from "@tanstack/react-router";
 import { Mail, Network, Phone } from "lucide-react";
 
-import { navLinks, site, socials } from "@/data/site";
+import { navLinks, site } from "@/data/site";
 import { services } from "@/data/services";
 import { Container } from "./section";
+import { useQuery } from "@tanstack/react-query";
+import { settingsQuery } from "@/lib/cms";
 
 export function Footer() {
+  const { data } = useQuery(settingsQuery);
+  const links = data?.socials ?? [];
+  const copyright = data?.general?.["footer_text"]?.trim() || "© 2026 Alfaz Ahmed. All rights reserved.";
   return (
     <footer className="border-t border-border bg-surface/40">
       <Container className="py-14">
@@ -90,13 +95,15 @@ export function Footer() {
               </li>
             </ul>
             <ul className="mt-5 flex flex-wrap gap-2">
-              {socials.map((s) => (
-                <li key={s.label}>
+              {links.map((s) => (
+                <li key={s.platform + s.url}>
                   <a
-                    href={s.href}
+                    href={s.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="inline-flex rounded-md border border-border bg-surface px-3 py-1.5 text-xs text-muted-foreground transition-colors hover:border-primary/50 hover:text-primary"
                   >
-                    {s.label}
+                    {s.platform}
                   </a>
                 </li>
               ))}
@@ -105,7 +112,7 @@ export function Footer() {
         </div>
 
         <div className="mt-12 flex flex-col gap-3 border-t border-border pt-6 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-xs text-muted-foreground">{site.copyright}</p>
+          <p className="text-xs text-muted-foreground">{copyright}</p>
           <div className="flex gap-5">
             <Link to="/privacy" className="text-xs text-muted-foreground transition-colors hover:text-primary">
               Privacy Policy
