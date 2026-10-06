@@ -17,3 +17,5 @@ Disallow: /admin
 Disallow: /auth
 Disallow: /api/
 Allow: /api/public/media/
+
+Sitemap: https://alfazahmedsajol.lovable.app/sitemap.xml

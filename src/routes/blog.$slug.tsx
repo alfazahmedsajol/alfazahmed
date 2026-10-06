@@ -114,7 +114,7 @@ function PostDetail() {
       <Container className="py-14 sm:py-20">
         <div className="mx-auto grid max-w-5xl gap-12 lg:grid-cols-[1fr_220px]">
           <div className="min-w-0">
-            {post.cover && <img src={post.cover} alt="" className="mb-10 w-full rounded-xl border border-border" />}
+            {post.cover && <img src={post.cover} alt={`Cover image for ${post.title}`} className="mb-10 w-full rounded-xl border border-border" />}
             {post.excerpt && <p className="border-l-2 border-primary pl-5 text-base leading-relaxed text-foreground sm:text-lg">{post.excerpt}</p>}
             <div className="mt-10"><Markdown>{post.content}</Markdown></div>
 
