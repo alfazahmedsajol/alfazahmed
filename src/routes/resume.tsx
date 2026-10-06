@@ -177,7 +177,7 @@ function Resume() {
 
 function CvButton() {
   const { data } = useQuery(settingsQuery);
-  const url = (data?.general?.resume_url ?? "").trim();
+  const url = (data?.general?.["resume_url"] ?? "").trim();
   if (!url) {
     return (
       <Button disabled title="CV not available yet">

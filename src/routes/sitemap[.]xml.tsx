@@ -17,7 +17,7 @@ export const Route = createFileRoute("/sitemap.xml")({
           sb.from("projects").select("slug,updated_at").eq("status", "published"),
           sb.from("site_settings").select("value").eq("key", "seo").maybeSingle(),
         ]);
-        const configured = ((seo.data?.value as Record<string, string> | null)?.site_url ?? "").trim().replace(/\/+$/, "");
+        const configured = ((seo.data?.value as Record<string, string> | null)?.["site_url"] ?? "").trim().replace(/\/+$/, "");
         const origin = /^https?:\/\//.test(configured) ? configured : new URL(request.url).origin;
         const urls = [
           ...STATIC.map((p) => ({ loc: p, lastmod: undefined as string | undefined })),

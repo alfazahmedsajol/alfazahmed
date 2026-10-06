@@ -10,7 +10,7 @@ import { settingsQuery } from "@/lib/cms";
 export function Footer() {
   const { data } = useQuery(settingsQuery);
   const links = data?.socials ?? [];
-  const copyright = data?.general?.footer_text?.trim() || "© 2026 Alfaz Ahmed. All rights reserved.";
+  const copyright = data?.general?["footer_text"]?.trim() || "© 2026 Alfaz Ahmed. All rights reserved.";
   return (
     <footer className="border-t border-border bg-surface/40">
       <Container className="py-14">

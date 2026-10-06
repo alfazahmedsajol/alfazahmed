@@ -312,7 +312,7 @@ function Home() {
 function ProfilePhoto() {
   const { data } = useQuery(settingsQuery);
   const [failed, setFailed] = useState(false);
-  const src = toImageUrl(data?.general?.profile_image);
+  const src = toImageUrl(data?.general?.["profile_image"]);
   if (src && !failed) {
     return (
       <img
