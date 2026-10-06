@@ -1,6 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Download, Mail, Phone } from "lucide-react";
-import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { TagChip } from "@/components/site/cards";
@@ -8,7 +7,7 @@ import { Reveal } from "@/components/site/reveal";
 import { Container, DemoNotice, PageHeader } from "@/components/site/section";
 import { certifications, education, experience, resumeSummary } from "@/data/resume";
 import { useQuery } from "@tanstack/react-query";
-import { projectsQuery } from "@/lib/cms";
+import { projectsQuery, settingsQuery } from "@/lib/cms";
 import { skillCategories } from "@/data/skills";
 import { site } from "@/data/site";
 
@@ -67,13 +66,7 @@ function Resume() {
                 <Phone className="h-4 w-4" aria-hidden="true" /> {site.phone}
               </a>
             </div>
-            <Button
-              onClick={() =>
-                toast.info("CV download will be enabled once the PDF is uploaded in the next phase.")
-              }
-            >
-              <Download className="mr-2 h-4 w-4" aria-hidden="true" /> Download CV
-            </Button>
+            <CvButton />
           </Reveal>
 
           <div className="panel mt-10 space-y-10 p-8 sm:p-10">
@@ -82,9 +75,6 @@ function Resume() {
               <p className="mt-5 text-sm leading-relaxed text-muted-foreground sm:text-base">
                 {resumeSummary}
               </p>
-              <div className="mt-5">
-                <DemoNotice>Placeholder resume content — replace with final details</DemoNotice>
-              </div>
             </Reveal>
 
             <Section title="Skills">
@@ -182,5 +172,24 @@ function Resume() {
         </Container>
       </section>
     </>
+  );
+}
+
+function CvButton() {
+  const { data } = useQuery(settingsQuery);
+  const url = (data?.general?.resume_url ?? "").trim();
+  if (!url) {
+    return (
+      <Button disabled title="CV not available yet">
+        <Download className="mr-2 h-4 w-4" aria-hidden="true" /> CV coming soon
+      </Button>
+    );
+  }
+  return (
+    <Button asChild>
+      <a href={url} target="_blank" rel="noopener noreferrer">
+        <Download className="mr-2 h-4 w-4" aria-hidden="true" /> Download CV
+      </a>
+    </Button>
   );
 }

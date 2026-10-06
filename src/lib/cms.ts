@@ -132,3 +132,11 @@ export const settingsQuery = queryOptions({
   },
   staleTime: 5 * 60_000,
 });
+
+/** Converts Google Drive share links to a direct image URL; passes other URLs through. */
+export function toImageUrl(url?: string | null): string | null {
+  const u = (url ?? "").trim();
+  if (!u) return null;
+  const m = u.match(/drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?(?:export=\w+&)?id=)([\w-]+)/);
+  return m ? `https://lh3.googleusercontent.com/d/${m[1]}` : u;
+}

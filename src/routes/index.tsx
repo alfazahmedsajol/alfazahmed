@@ -8,7 +8,8 @@ import { Reveal } from "@/components/site/reveal";
 import { Container, DemoNotice, SectionHeading } from "@/components/site/section";
 import { blogPosts } from "@/data/blog";
 import { useQuery } from "@tanstack/react-query";
-import { projectsQuery } from "@/lib/cms";
+import { projectsQuery, settingsQuery, toImageUrl } from "@/lib/cms";
+import { useState } from "react";
 import { services } from "@/data/services";
 import { coreSkills } from "@/data/skills";
 import { certifications } from "@/data/resume";
@@ -82,15 +83,7 @@ function Home() {
 
             <Reveal delay={120} className="justify-self-center lg:justify-self-end">
               <div className="panel relative w-64 p-5 sm:w-80">
-                <div className="flex aspect-square items-center justify-center rounded-lg border border-dashed border-border bg-background/60">
-                  <div className="text-center">
-                    <User className="mx-auto h-10 w-10 text-primary" aria-hidden="true" />
-                    <p className="mt-3 font-mono text-[0.7rem] uppercase tracking-[0.18em] text-muted-foreground">
-                      Profile photo
-                    </p>
-                    <p className="mt-1 text-xs text-muted-foreground">Placeholder — add later</p>
-                  </div>
-                </div>
+                <ProfilePhoto />
                 <div className="mt-5">
                   <p className="font-display text-base font-semibold text-foreground">{site.owner}</p>
                   <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{site.role}</p>
@@ -313,5 +306,27 @@ function Home() {
         </Container>
       </section>
     </>
+  );
+}
+
+function ProfilePhoto() {
+  const { data } = useQuery(settingsQuery);
+  const [failed, setFailed] = useState(false);
+  const src = toImageUrl(data?.general?.profile_image);
+  if (src && !failed) {
+    return (
+      <img
+        src={src}
+        alt={`Portrait of ${site.owner}`}
+        referrerPolicy="no-referrer"
+        onError={() => setFailed(true)}
+        className="aspect-square w-full rounded-lg border border-border object-cover"
+      />
+    );
+  }
+  return (
+    <div className="flex aspect-square items-center justify-center rounded-lg border border-border bg-background/60">
+      <User className="h-16 w-16 text-primary" aria-hidden="true" />
+    </div>
   );
 }
