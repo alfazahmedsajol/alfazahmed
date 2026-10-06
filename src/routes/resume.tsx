@@ -4,7 +4,7 @@ import { Download, Mail, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { TagChip } from "@/components/site/cards";
 import { Reveal } from "@/components/site/reveal";
-import { Container, DemoNotice, PageHeader } from "@/components/site/section";
+import { Container, PageHeader } from "@/components/site/section";
 import { certifications, education, experience, resumeSummary } from "@/data/resume";
 import { useQuery } from "@tanstack/react-query";
 import { projectsQuery, settingsQuery } from "@/lib/cms";

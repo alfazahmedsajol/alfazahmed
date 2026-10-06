@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 
 import { Button } from "@/components/ui/button";
 import { Reveal } from "@/components/site/reveal";
-import { Container, DemoNotice, PageHeader, SectionHeading } from "@/components/site/section";
+import { Container, PageHeader, SectionHeading } from "@/components/site/section";
 import { timeline } from "@/data/resume";
 
 export const Route = createFileRoute("/about")({
