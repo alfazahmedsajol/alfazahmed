@@ -9,8 +9,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Reveal } from "@/components/site/reveal";
-import { Container, DemoNotice, PageHeader } from "@/components/site/section";
-import { site, socials } from "@/data/site";
+import { Container, PageHeader } from "@/components/site/section";
+import { site } from "@/data/site";
+import { useQuery } from "@tanstack/react-query";
+import { settingsQuery } from "@/lib/cms";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
@@ -46,6 +48,10 @@ function validate(values: Fields): Errors {
 }
 
 function Contact() {
+  const { data: settings } = useQuery(settingsQuery);
+  const socialLinks = settings?.socials ?? [];
+  const contactEmail = settings?.general?.["email"]?.trim() || site.email;
+  const contactPhone = settings?.general?.["phone"]?.trim() || site.phone;
   const [values, setValues] = useState<Fields>({ name: "", email: "", subject: "", message: "" });
   const [errors, setErrors] = useState<Errors>({});
 
@@ -205,27 +211,29 @@ function Contact() {
                 </ul>
               </div>
 
-              <div className="panel p-7">
-                <h2 className="text-lg font-semibold text-foreground">Social</h2>
-                <p className="mt-2 text-sm text-muted-foreground">
-                  Profile links are placeholders until the accounts are added.
-                </p>
-                <ul className="mt-5 grid grid-cols-2 gap-3">
-                  {socials.map((s) => (
-                    <li key={s.label}>
-                      <a
-                        href={s.href}
-                        className="block rounded-lg border border-border bg-background/60 px-4 py-3 text-sm text-foreground transition-colors hover:border-primary/50 hover:text-primary"
-                      >
-                        {s.label}
-                        <span className="mt-1 block font-mono text-[0.65rem] text-muted-foreground">
-                          {s.handle}
-                        </span>
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              {socialLinks.length > 0 && (
+                <div className="panel p-7">
+                  <h2 className="text-lg font-semibold text-foreground">Social</h2>
+                  <ul className="mt-5 grid grid-cols-2 gap-3">
+                    {socialLinks.map((s) => (
+                      <li key={s.url}>
+                        <a
+                          href={s.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="block rounded-lg border border-border bg-background/60 px-4 py-3 text-sm text-foreground transition-colors hover:border-primary/50 hover:text-primary"
+                        >
+                          {s.platform}
+                          <span className="mt-1 block truncate font-mono text-[0.65rem] text-muted-foreground">
+                            {s.url.replace(/^https?:\/\/(www\.)?/, "")}
+                          </span>
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
 
               <div className="panel p-7">
                 <h2 className="text-lg font-semibold text-foreground">What to include</h2>
