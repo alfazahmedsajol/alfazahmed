@@ -178,7 +178,7 @@ function Contact() {
                 <ul className="mt-5 space-y-4">
                   <li>
                     <a
-                      href={`mailto:${site.email}`}
+                      href={`mailto:${contactEmail}`}
                       className="flex items-center gap-3 text-sm text-muted-foreground transition-colors hover:text-primary"
                     >
                       <span className="flex h-10 w-10 items-center justify-center rounded-lg border border-border bg-background/60 text-primary">
@@ -188,13 +188,13 @@ function Contact() {
                         <span className="block font-mono text-[0.68rem] uppercase tracking-[0.18em] text-muted-foreground">
                           Email
                         </span>
-                        <span className="block text-foreground">{site.email}</span>
+                        <span className="block text-foreground">{contactEmail}</span>
                       </span>
                     </a>
                   </li>
                   <li>
                     <a
-                      href={`tel:${site.phone.replace(/\s/g, "")}`}
+                      href={`tel:${contactPhone.replace(/\s/g, "")}`}
                       className="flex items-center gap-3 text-sm text-muted-foreground transition-colors hover:text-primary"
                     >
                       <span className="flex h-10 w-10 items-center justify-center rounded-lg border border-border bg-background/60 text-primary">
@@ -204,7 +204,7 @@ function Contact() {
                         <span className="block font-mono text-[0.68rem] uppercase tracking-[0.18em] text-muted-foreground">
                           Phone
                         </span>
-                        <span className="block text-foreground">{site.phone}</span>
+                        <span className="block text-foreground">{contactPhone}</span>
                       </span>
                     </a>
                   </li>
