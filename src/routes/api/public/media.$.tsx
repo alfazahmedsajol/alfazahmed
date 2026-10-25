@@ -13,7 +13,7 @@ export const Route = createFileRoute("/api/public/media/$")({
       GET: async ({ params }) => {
         let path: string;
         try { path = decodeURIComponent(params._splat ?? ""); } catch { return new Response("Not found", { status: 404 }); }
-        if (!PATH_RE.test(path) || path.includes("..") || !PUBLIC_FOLDERS.has(path.split("/")[0])) {
+        if (!PATH_RE.test(path) || path.includes("..") || !PUBLIC_FOLDERS.has(path.split("/")[0] ?? "")) {
           return new Response("Not found", { status: 404 });
         }
         const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
