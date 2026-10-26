@@ -41,7 +41,7 @@ function Home() {
   const { data: skillCats = [] } = useQuery(skillsQuery);
   const allSkills = skillCats.flatMap((c) => c.skills);
   const featuredSkills = allSkills.filter((s) => s.featured);
-  const coreSkills = (featuredSkills.length ? featuredSkills : allSkills).slice(0, 10).map((s) => s.name);
+  const coreSkills = [...featuredSkills, ...allSkills.filter((s) => !s.featured)].slice(0, 10).map((s) => s.name);
   const homeServices = (services.some((s) => s.featured) ? services.filter((s) => s.featured) : services).slice(0, 6);
   const homeCerts = (certifications.some((c) => c.featured) ? certifications.filter((c) => c.featured) : certifications).slice(0, 3);
   return (
