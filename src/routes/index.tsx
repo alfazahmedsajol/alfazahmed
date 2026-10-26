@@ -6,13 +6,9 @@ import { BlogCard, ProjectCard, TagChip } from "@/components/site/cards";
 import { NetworkBackdrop } from "@/components/site/network-backdrop";
 import { Reveal } from "@/components/site/reveal";
 import { Container, DemoNotice, SectionHeading } from "@/components/site/section";
-import { blogPosts } from "@/data/blog";
 import { useQuery } from "@tanstack/react-query";
-import { projectsQuery, settingsQuery, toImageUrl } from "@/lib/cms";
+import { blogListQuery, certificationsQuery, projectsQuery, servicesQuery, settingsQuery, skillsQuery, toImageUrl } from "@/lib/cms";
 import { useState } from "react";
-import { services } from "@/data/services";
-import { coreSkills } from "@/data/skills";
-import { certifications } from "@/data/resume";
 import { site, techBadges } from "@/data/site";
 
 export const Route = createFileRoute("/")({
@@ -39,6 +35,15 @@ export const Route = createFileRoute("/")({
 function Home() {
   const { data: proj } = useQuery(projectsQuery);
   const featuredProjects = (proj?.projects ?? []).filter((p) => p.featured).slice(0, 6);
+  const { data: services = [] } = useQuery(servicesQuery);
+  const { data: blog } = useQuery(blogListQuery);
+  const { data: certifications = [] } = useQuery(certificationsQuery);
+  const { data: skillCats = [] } = useQuery(skillsQuery);
+  const allSkills = skillCats.flatMap((c) => c.skills);
+  const featuredSkills = allSkills.filter((s) => s.featured);
+  const coreSkills = (featuredSkills.length ? featuredSkills : allSkills).slice(0, 10).map((s) => s.name);
+  const homeServices = (services.some((s) => s.featured) ? services.filter((s) => s.featured) : services).slice(0, 6);
+  const homeCerts = (certifications.some((c) => c.featured) ? certifications.filter((c) => c.featured) : certifications).slice(0, 3);
   return (
     <>
       {/* Hero */}
@@ -197,13 +202,13 @@ function Home() {
             description="From router configuration to automated operations, with documentation included."
           />
           <div className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {services.map((s, i) => (
-              <Reveal key={s.slug} delay={i * 60}>
+            {homeServices.map((s, i) => (
+              <Reveal key={s.id} delay={i * 60}>
                 <article className="panel panel-hover h-full p-6">
                   <h3 className="text-base font-semibold text-foreground">{s.title}</h3>
                   <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{s.description}</p>
                   <ul className="mt-5 flex flex-wrap gap-2">
-                    {s.technologies.map((t) => (
+                    {(s.technologies ?? []).map((t) => (
                       <li key={t}>
                         <TagChip>{t}</TagChip>
                       </li>
@@ -232,7 +237,7 @@ function Home() {
             description="Notes from labs, configuration decisions and automation experiments."
           />
           <div className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {blogPosts.slice(0, 3).map((p, i) => (
+            {(blog?.posts ?? []).slice(0, 3).map((p, i) => (
               <Reveal key={p.slug} delay={i * 70}>
                 <BlogCard post={p} />
               </Reveal>
@@ -262,16 +267,16 @@ function Home() {
             </Reveal>
           </div>
           <div className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {certifications.slice(0, 3).map((c, i) => (
-              <Reveal key={c.title} delay={i * 70}>
+            {homeCerts.map((c, i) => (
+              <Reveal key={c.id} delay={i * 70}>
                 <article className="panel panel-hover h-full p-6">
                   <div className="flex items-center justify-between gap-3">
                     <span className="font-mono text-[0.68rem] uppercase tracking-[0.18em] text-primary">
                       {c.status}
                     </span>
-                    <span className="font-mono text-[0.68rem] text-muted-foreground">{c.year}</span>
+                    <span className="font-mono text-[0.68rem] text-muted-foreground">{c.issued_on?.slice(0, 4) ?? ""}</span>
                   </div>
-                  <h3 className="mt-4 text-base font-semibold text-foreground">{c.title}</h3>
+                  <h3 className="mt-4 text-base font-semibold text-foreground">{c.name}</h3>
                   <p className="mt-1 text-sm text-muted-foreground">{c.issuer}</p>
                   <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{c.description}</p>
                 </article>
