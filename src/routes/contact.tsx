@@ -106,7 +106,7 @@ function Contact() {
                 <div className="mt-3">
                 </div>
 
-                <div className="mt-8 grid flex-1 grid-rows-[auto_auto_1fr] gap-5 sm:grid-cols-2">
+                <div className="mt-8 grid flex-1 gap-5 sm:grid-cols-2 sm:grid-rows-[auto_auto_1fr]">
                   <div>
                     <Label htmlFor="name">Name</Label>
                     <Input
