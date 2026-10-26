@@ -100,13 +100,13 @@ function Contact() {
       <section className="py-14 sm:py-20">
         <Container>
           <div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr]">
-            <Reveal>
-              <form onSubmit={onSubmit} noValidate className="panel p-7 sm:p-9">
+            <Reveal className="h-full">
+              <form onSubmit={onSubmit} noValidate className="panel flex h-full flex-col p-7 sm:p-9">
                 <h2 className="text-lg font-semibold text-foreground">Send a message</h2>
                 <div className="mt-3">
                 </div>
 
-                <div className="mt-8 grid gap-5 sm:grid-cols-2">
+                <div className="mt-8 grid flex-1 gap-5 sm:grid-cols-2 sm:grid-rows-[auto_auto_1fr]">
                   <div>
                     <Label htmlFor="name">Name</Label>
                     <Input
@@ -149,7 +149,7 @@ function Contact() {
                     />
                     {fieldError("subject")}
                   </div>
-                  <div className="sm:col-span-2">
+                  <div className="flex flex-col sm:col-span-2">
                     <Label htmlFor="message">Message</Label>
                     <Textarea
                       id="message"
@@ -159,7 +159,7 @@ function Contact() {
                       onChange={update("message")}
                       aria-invalid={Boolean(errors.message)}
                       aria-describedby={errors.message ? "message-error" : undefined}
-                      className="mt-2"
+                      className="mt-2 min-h-36 flex-1 resize-none"
                     />
                     {fieldError("message")}
                   </div>
