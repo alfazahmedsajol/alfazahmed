@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { navLinks, site } from "@/data/site";
 import { Container } from "./section";
+import { ThemeToggle } from "./theme-toggle";
 
 export function Navbar() {
   const [open, setOpen] = useState(false);
@@ -64,6 +65,8 @@ export function Navbar() {
             </Link>
           ))}
         </nav>
+
+        <ThemeToggle className="ml-auto xl:ml-0" />
 
         <div className="hidden xl:block">
           <Button asChild>

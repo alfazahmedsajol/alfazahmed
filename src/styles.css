@@ -2,7 +2,7 @@
 @source "../src";
 @import "tw-animate-css";
 
-@custom-variant dark (&:is(.dark *));
+@custom-variant dark (&:where(.dark, .dark *));
 
 /*
  * Design system — "AI-Powered Networking & Automation"
@@ -61,6 +61,56 @@
 }
 
 :root {
+  --radius: 0.5rem;
+  --background: oklch(0.985 0.004 240);
+  --foreground: oklch(0.22 0.03 250);
+  --surface: oklch(1 0 0);
+  --surface-foreground: oklch(0.22 0.03 250);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.22 0.03 250);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.22 0.03 250);
+  --primary: oklch(0.52 0.11 195);
+  --primary-foreground: oklch(0.99 0.005 200);
+  --secondary: oklch(0.95 0.008 240);
+  --secondary-foreground: oklch(0.25 0.03 250);
+  --muted: oklch(0.955 0.007 240);
+  --muted-foreground: oklch(0.47 0.025 250);
+  --accent: oklch(0.5 0.15 258);
+  --accent-foreground: oklch(0.99 0.005 250);
+  --destructive: oklch(0.55 0.21 25);
+  --destructive-foreground: oklch(0.99 0.005 240);
+  --border: oklch(0.9 0.01 245);
+  --input: oklch(0.88 0.012 245);
+  --ring: oklch(0.52 0.11 195);
+  --grid: oklch(0.8 0.015 245 / 45%);
+  --node: oklch(0.55 0.11 195);
+  --signal: oklch(0.52 0.15 258);
+  --chart-1: oklch(0.52 0.11 195);
+  --chart-2: oklch(0.5 0.15 258);
+  --chart-3: oklch(0.55 0.13 150);
+  --chart-4: oklch(0.65 0.14 75);
+  --chart-5: oklch(0.52 0.17 320);
+  --sidebar: oklch(0.97 0.006 240);
+  --sidebar-foreground: oklch(0.22 0.03 250);
+  --sidebar-primary: oklch(0.52 0.11 195);
+  --sidebar-primary-foreground: oklch(0.99 0.005 200);
+  --sidebar-accent: oklch(0.93 0.01 240);
+  --sidebar-accent-foreground: oklch(0.22 0.03 250);
+  --sidebar-border: oklch(0.9 0.01 245);
+  --sidebar-ring: oklch(0.52 0.11 195);
+  --gradient-signal: linear-gradient(
+    135deg,
+    color-mix(in oklab, var(--primary) 85%, transparent),
+    color-mix(in oklab, var(--signal) 85%, transparent)
+  );
+  --shadow-panel: 0 18px 40px -26px oklch(0.3 0.03 250 / 35%);
+  --shadow-glow: 0 0 0 1px color-mix(in oklab, var(--primary) 30%, transparent),
+    0 18px 40px -22px color-mix(in oklab, var(--primary) 35%, transparent);
+  --transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dark {
   --radius: 0.5rem;
 
   --background: oklch(0.17 0.02 250);
