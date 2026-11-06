@@ -67,7 +67,7 @@ export const sections: Record<string, CrudConfig> = {
     ],
   },
   blog: {
-    table: "blog_posts", title: "Blog posts", singular: "Post", orderBy: "created_at", publishKey: "status", featuredKey: "featured", slugFrom: "title",
+    table: "blog_posts", title: "Blog posts", singular: "Post", orderBy: "created_at", sortable: true, publishKey: "status", featuredKey: "featured", slugFrom: "title",
     columns: ["title", "category_id", "published_at"],
     fields: [
       { key: "title", label: "Title", type: "text", required: true },

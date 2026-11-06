@@ -71,7 +71,7 @@ function AdminPage() {
     );
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-10">
+    <div>
       <div className="flex items-center justify-between">
         <h1 className="font-display text-3xl font-semibold">Dashboard</h1>
         <Button variant="outline" onClick={logout}>Log out</Button>

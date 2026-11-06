@@ -237,7 +237,10 @@ function Home() {
             description="Notes from labs, configuration decisions and automation experiments."
           />
           <div className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {(blog?.posts ?? []).slice(0, 3).map((p, i) => (
+            {[
+              ...(blog?.posts ?? []).filter((p) => p.featured).sort((a, b) => a.sortOrder - b.sortOrder),
+              ...(blog?.posts ?? []).filter((p) => !p.featured),
+            ].slice(0, 3).map((p, i) => (
               <Reveal key={p.slug} delay={i * 70}>
                 <BlogCard post={p} />
               </Reveal>

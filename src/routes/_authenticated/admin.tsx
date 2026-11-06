@@ -7,6 +7,7 @@ import {
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { nav } from "@/components/admin/sections";
+import { ThemeToggle } from "@/components/site/theme-toggle";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({
@@ -66,7 +67,10 @@ function AdminLayout() {
     <div className="flex min-h-screen">
       <aside className="sticky top-0 flex h-screen w-60 shrink-0 flex-col border-r border-border bg-background/60">
         <div className="border-b border-border px-4 py-4">
-          <Link to="/" className="block px-3 font-display text-lg font-semibold">Alfaz Admin</Link>
+          <div className="flex items-center justify-between gap-2">
+            <Link to="/" className="block px-3 font-display text-lg font-semibold">Alfaz Admin</Link>
+            <ThemeToggle />
+          </div>
         </div>
         <nav className="flex-1 space-y-4 overflow-y-auto px-4 py-4">
           <Link to="/admin" activeOptions={{ exact: true }} className={linkCls} activeProps={{ className: activeCls }}>
@@ -100,7 +104,9 @@ function AdminLayout() {
           </button>
         </div>
       </aside>
-      <div className="min-w-0 flex-1 p-6 lg:p-10"><Outlet /></div>
+      <div className="min-w-0 flex-1 p-6 lg:p-10">
+        <div className="mx-auto w-full max-w-7xl"><Outlet /></div>
+      </div>
     </div>
   );
 }

@@ -88,6 +88,7 @@ export type Database = {
           seo_description: string | null
           seo_title: string | null
           slug: string
+          sort_order: number
           status: string
           tags: string[]
           title: string
@@ -109,6 +110,7 @@ export type Database = {
           seo_description?: string | null
           seo_title?: string | null
           slug: string
+          sort_order?: number
           status?: string
           tags?: string[]
           title: string
@@ -130,6 +132,7 @@ export type Database = {
           seo_description?: string | null
           seo_title?: string | null
           slug?: string
+          sort_order?: number
           status?: string
           tags?: string[]
           title?: string

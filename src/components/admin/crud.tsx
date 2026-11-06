@@ -38,6 +38,7 @@ export type CrudConfig = {
   publishKey?: "published" | "status";
   featuredKey?: string;
   slugFrom?: string;
+  sortable?: boolean; // has sort_order but list is ordered by another column; reorder in Featured view
 };
 
 type Row = Record<string, unknown> & { id: string; status?: unknown; published?: unknown; slug?: unknown; published_at?: unknown; sort_order?: any };
@@ -45,6 +46,7 @@ type Row = Record<string, unknown> & { id: string; status?: unknown; published?:
 const db = supabase as any;
 const PAGE = 10;
 
+const bySort = (a: Row[]) => [...a].sort((x, y) => (Number(x.sort_order) || 0) - (Number(y.sort_order) || 0) || x.id.localeCompare(y.id));
 const slugify = (s: string) => s.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 
 export function CrudPage({ config }: { config: CrudConfig }) {
@@ -59,7 +61,7 @@ export function CrudPage({ config }: { config: CrudConfig }) {
   const list = useQuery({
     queryKey: key,
     queryFn: async () => {
-      const { data, error } = await db.from(config.table).select("*").order(config.orderBy, { ascending: config.orderBy === "sort_order" });
+      const { data, error } = await db.from(config.table).select("*").order(config.orderBy, { ascending: config.orderBy === "sort_order" }).order("id");
       if (error) throw error;
       return data as Row[];
     },
@@ -80,11 +82,14 @@ export function CrudPage({ config }: { config: CrudConfig }) {
     },
   });
 
+  const hasSort = config.orderBy === "sort_order" || !!config.sortable;
+  const canReorder = hasSort && !search && (filter === "featured" || (filter === "all" && config.orderBy === "sort_order"));
   const isPub = (r: Row) => (config.publishKey === "status" ? r.status === "published" : r.published === true);
 
   const rows = useMemo(() => {
     const q = search.trim().toLowerCase();
-    return (list.data ?? []).filter((r) => {
+    const base = filter === "featured" && hasSort ? bySort(list.data ?? []) : (list.data ?? []);
+    return base.filter((r) => {
       if (filter === "published" && !isPub(r)) return false;
       if (filter === "draft" && isPub(r)) return false;
       if (filter === "featured" && !(config.featuredKey && r[config.featuredKey])) return false;
@@ -113,6 +118,7 @@ export function CrudPage({ config }: { config: CrudConfig }) {
       if ("reading_time" in payload && !payload["reading_time"] && payload["content"]) payload["reading_time"] = `${Math.max(1, Math.round(String(payload["content"]).split(/\s+/).length / 200))} min read`;
       if (config.slugFrom && !payload.slug) payload.slug = slugify(String(payload[config.slugFrom] ?? ""));
       if (config.publishKey === "status" && payload.status === "published" && !r.published_at) payload.published_at = new Date().toISOString();
+      if (!r.id && hasSort && !payload.sort_order) payload.sort_order = Math.max(0, ...(list.data ?? []).map((x) => Number(x.sort_order) || 0)) + 10;
       const res = r.id ? await db.from(config.table).update(payload).eq("id", r.id) : await db.from(config.table).insert(payload);
       if (res.error) throw res.error;
     },
@@ -125,7 +131,27 @@ export function CrudPage({ config }: { config: CrudConfig }) {
       const { error } = await db.from(config.table).update(values).eq("id", id);
       if (error) throw error;
     },
-    onSuccess: refresh,
+    onMutate: ({ id, values }) => {
+      qc.setQueryData<Row[]>(key, (old) => old?.map((x) => (x.id === id ? { ...x, ...values } : x)));
+    },
+    onSettled: refresh,
+    onError: (e: Error) => toast.error(e.message),
+  });
+
+  const reorder = useMutation({
+    mutationFn: async (updates: { id: string; sort_order: number }[]) => {
+      const res = await Promise.all(updates.map((u) => db.from(config.table).update({ sort_order: u.sort_order }).eq("id", u.id)));
+      const err = res.find((x: { error: unknown }) => x.error);
+      if (err) throw err.error;
+    },
+    onMutate: (updates) => {
+      const m = new Map(updates.map((u) => [u.id, u.sort_order]));
+      qc.setQueryData<Row[]>(key, (old) => {
+        const next = old?.map((x) => (m.has(x.id) ? { ...x, sort_order: m.get(x.id) } : x));
+        return next && config.orderBy === "sort_order" ? bySort(next) : next;
+      });
+    },
+    onSettled: refresh,
     onError: (e: Error) => toast.error(e.message),
   });
 
@@ -139,12 +165,17 @@ export function CrudPage({ config }: { config: CrudConfig }) {
   });
 
   function move(r: Row, dir: -1 | 1) {
-    const all = list.data ?? [];
-    const i = all.findIndex((x) => x.id === r.id);
-    const o = all[i + dir];
-    if (!o) return;
-    patch.mutate({ id: r.id, values: { sort_order: o.sort_order } });
-    patch.mutate({ id: o.id, values: { sort_order: r.sort_order === o.sort_order ? Number(o.sort_order) - dir : r.sort_order } });
+    // Swap with the neighbour in the visible list, then renumber everything so orders stay unique.
+    const i = rows.findIndex((x) => x.id === r.id);
+    const o = rows[i + dir];
+    if (!o || reorder.isPending) return;
+    const full = bySort(list.data ?? []);
+    const a = full.findIndex((x) => x.id === r.id);
+    const b = full.findIndex((x) => x.id === o.id);
+    [full[a], full[b]] = [full[b]!, full[a]!];
+    const updates = full.map((x, idx) => ({ id: x.id, sort_order: (idx + 1) * 10, old: Number(x.sort_order) }))
+      .filter((u) => u.sort_order !== u.old).map(({ id, sort_order }) => ({ id, sort_order }));
+    reorder.mutate(updates);
   }
 
   function togglePub(r: Row) {
@@ -178,6 +209,11 @@ export function CrudPage({ config }: { config: CrudConfig }) {
         ))}
       </div>
 
+      {config.featuredKey && hasSort && (
+        <p className="mt-3 text-xs text-muted-foreground">
+          {filter === "featured" ? "Use the arrows to set the order featured items appear on the homepage." : 'Tip: open "Featured" to set the order of featured items.'}
+        </p>
+      )}
       <div className="panel mt-4 overflow-x-auto">
         {list.isLoading ? <p className="p-6 text-sm text-muted-foreground">Loading…</p>
         : list.error ? <p className="p-6 text-sm text-destructive">Couldn't load: {(list.error as Error).message}</p>
@@ -199,7 +235,7 @@ export function CrudPage({ config }: { config: CrudConfig }) {
                   {config.publishKey && <td className="p-3"><Switch checked={isPub(r)} onCheckedChange={() => togglePub(r)} aria-label="Published" /></td>}
                   {config.featuredKey && <td className="p-3"><Switch checked={!!r[config.featuredKey]} onCheckedChange={(v) => patch.mutate({ id: r.id, values: { [config.featuredKey!]: v } })} aria-label="Featured" /></td>}
                   <td className="whitespace-nowrap p-3 text-right">
-                    {config.orderBy === "sort_order" && !search && filter === "all" && (<>
+                    {canReorder && (<>
                       <Button size="icon" variant="ghost" aria-label="Move up" onClick={() => move(r, -1)}><ArrowUp className="h-4 w-4" /></Button>
                       <Button size="icon" variant="ghost" aria-label="Move down" onClick={() => move(r, 1)}><ArrowDown className="h-4 w-4" /></Button>
                     </>)}

@@ -36,7 +36,7 @@ const SEO: F[] = [
 
 function Settings() {
   return (
-    <div className="max-w-3xl space-y-10">
+    <div className="mx-auto w-full max-w-4xl space-y-10">
       <h1 className="font-display text-2xl font-semibold">Site & SEO settings</h1>
       <Group settingKey="general" title="General" fields={GENERAL} />
       <Group settingKey="seo" title="SEO defaults" fields={SEO} />

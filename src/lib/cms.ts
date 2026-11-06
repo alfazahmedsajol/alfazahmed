@@ -33,17 +33,17 @@ export const certificationsQuery = queryOptions({
 
 export type PublicPost = {
   id: string; slug: string; title: string; category: string; date: string; readingTime: string;
-  excerpt: string; tags: string[]; featured: boolean; content: string; cover: string | null; author: string;
+  excerpt: string; tags: string[]; featured: boolean; sortOrder: number; content: string; cover: string | null; author: string;
   seoTitle: string | null; seoDescription: string | null; canonical: string | null; ogImage: string | null;
 };
 
-const POST_COLS = "id,slug,title,excerpt,content,cover_url,featured,published_at,created_at,reading_time,tags,author,seo_title,seo_description,canonical_url,og_image_url,blog_categories(name)";
+const POST_COLS = "id,slug,title,excerpt,content,cover_url,featured,sort_order,published_at,created_at,reading_time,tags,author,seo_title,seo_description,canonical_url,og_image_url,blog_categories(name)";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function toPost(r: any): PublicPost {
   const content = r.content ?? "";
   return {
-    id: r.id, slug: r.slug, title: r.title, excerpt: r.excerpt ?? "", content, featured: r.featured,
+    id: r.id, slug: r.slug, title: r.title, excerpt: r.excerpt ?? "", content, featured: r.featured, sortOrder: r.sort_order ?? 0,
     category: r.blog_categories?.name ?? "General", date: (r.published_at ?? r.created_at).slice(0, 10),
     readingTime: r.reading_time || `${Math.max(1, Math.round(content.split(/\s+/).length / 200))} min read`,
     tags: r.tags ?? [], cover: r.cover_url, author: r.author || "Alfaz Ahmed",
