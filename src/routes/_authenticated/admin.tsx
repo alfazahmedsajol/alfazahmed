@@ -1,5 +1,9 @@
 import { createFileRoute, Link, Outlet, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  LayoutDashboard, FileText, FolderTree, Briefcase, Layers, Zap, Tags, Wrench, Award,
+  Mail, BriefcaseBusiness, GraduationCap, Image, Settings, LogOut, type LucideIcon,
+} from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { nav } from "@/components/admin/sections";
@@ -19,8 +23,15 @@ export const Route = createFileRoute("/_authenticated/admin")({
   component: AdminLayout,
 });
 
-const linkCls = "block rounded-md px-3 py-1.5 text-sm text-muted-foreground hover:bg-surface hover:text-foreground";
-const activeCls = "bg-primary/10 text-primary";
+const icons: Record<string, LucideIcon> = {
+  blog: FileText, "blog-categories": FolderTree, projects: Briefcase, "project-categories": Layers,
+  skills: Zap, "skill-categories": Tags, services: Wrench, certifications: Award, messages: Mail,
+  experience: BriefcaseBusiness, education: GraduationCap, media: Image, settings: Settings,
+};
+
+const linkCls =
+  "flex items-center gap-2.5 rounded-md border-l-2 border-transparent px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-surface hover:text-foreground";
+const activeCls = "border-primary bg-primary/10 font-medium text-primary";
 
 function AdminLayout() {
   const navigate = useNavigate();
@@ -53,22 +64,41 @@ function AdminLayout() {
 
   return (
     <div className="flex min-h-screen">
-      <aside className="w-56 shrink-0 border-r border-border bg-background/60 p-4">
-        <Link to="/" className="block px-3 font-display text-lg font-semibold">Alfaz Admin</Link>
-        <nav className="mt-6 space-y-5">
-          <Link to="/admin" activeOptions={{ exact: true }} className={linkCls} activeProps={{ className: activeCls }}>Dashboard</Link>
+      <aside className="sticky top-0 flex h-screen w-60 shrink-0 flex-col border-r border-border bg-background/60">
+        <div className="border-b border-border px-4 py-4">
+          <Link to="/" className="block px-3 font-display text-lg font-semibold">Alfaz Admin</Link>
+        </div>
+        <nav className="flex-1 space-y-4 overflow-y-auto px-4 py-4">
+          <Link to="/admin" activeOptions={{ exact: true }} className={linkCls} activeProps={{ className: activeCls }}>
+            <LayoutDashboard className="h-4 w-4 shrink-0" /> Dashboard
+          </Link>
           {nav.map((g) => (
-            <div key={g.group}>
-              <p className="px-3 font-mono text-[0.65rem] uppercase tracking-[0.2em] text-muted-foreground">{g.group}</p>
+            <div key={g.group} className="border-t border-border/60 pt-4">
+              <p className="flex items-center gap-2 px-3 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.2em] text-primary">
+                <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+                {g.group}
+              </p>
               <div className="mt-2 space-y-0.5">
-                {g.items.map(([slug, label]) => (
-                  <Link key={slug} to="/admin/$section" params={{ section: slug }} className={linkCls} activeProps={{ className: activeCls }}>{label}</Link>
-                ))}
+                {g.items.map(([slug, label]) => {
+                  const Icon = icons[slug] ?? FileText;
+                  return (
+                    <Link key={slug} to="/admin/$section" params={{ section: slug }} className={linkCls} activeProps={{ className: activeCls }}>
+                      <Icon className="h-4 w-4 shrink-0" /> {label}
+                    </Link>
+                  );
+                })}
               </div>
             </div>
           ))}
-          <button onClick={logout} className={linkCls + " w-full text-left"}>Log out</button>
         </nav>
+        <div className="border-t border-border p-4">
+          <button
+            onClick={logout}
+            className="flex w-full items-center gap-2.5 rounded-md px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
+          >
+            <LogOut className="h-4 w-4" /> Log out
+          </button>
+        </div>
       </aside>
       <div className="min-w-0 flex-1 p-6 lg:p-10"><Outlet /></div>
     </div>
