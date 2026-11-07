@@ -5,9 +5,9 @@ import { Button } from "@/components/ui/button";
 import { TagChip } from "@/components/site/cards";
 import { Reveal } from "@/components/site/reveal";
 import { Container, PageHeader } from "@/components/site/section";
-import { certifications, education, experience, resumeSummary } from "@/data/resume";
+import { resumeSummary } from "@/data/resume";
 import { useQuery } from "@tanstack/react-query";
-import { projectsQuery, settingsQuery } from "@/lib/cms";
+import { certificationsQuery, educationQuery, experienceQuery, formatPeriod, projectsQuery, settingsQuery } from "@/lib/cms";
 import { skillCategories } from "@/data/skills";
 import { site } from "@/data/site";
 
@@ -25,7 +25,9 @@ export const Route = createFileRoute("/resume")({
         property: "og:description",
         content: "Summary, skills, experience, projects, education and certifications.",
       },
+      { property: "og:type", content: "profile" },
     ],
+    links: [{ rel: "canonical", href: "https://alfazahmedsajol.lovable.app/resume" }],
   }),
   component: Resume,
 });
@@ -41,6 +43,9 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 
 function Resume() {
   const projQ = useQuery(projectsQuery);
+  const experience = useQuery(experienceQuery).data ?? [];
+  const education = useQuery(educationQuery).data ?? [];
+  const certifications = useQuery(certificationsQuery).data ?? [];
   return (
     <>
       <PageHeader
@@ -97,14 +102,14 @@ function Resume() {
             <Section title="Experience">
               <ul className="space-y-7">
                 {experience.map((e) => (
-                  <li key={e.role}>
+                  <li key={e.id}>
                     <div className="flex flex-wrap items-baseline justify-between gap-2">
                       <h3 className="text-base font-semibold text-foreground">{e.role}</h3>
-                      <span className="font-mono text-xs text-muted-foreground">{e.period}</span>
+                      <span className="font-mono text-xs text-muted-foreground">{formatPeriod(e.start_date, e.end_date, e.is_current)}</span>
                     </div>
-                    <p className="mt-1 text-sm text-muted-foreground">{e.org}</p>
+                    {e.company && <p className="mt-1 text-sm text-muted-foreground">{e.company}</p>}
                     <ul className="mt-3 space-y-2">
-                      {e.points.map((p) => (
+                      {(e.description ?? "").split("\n").map((p) => p.replace(/^[-*•]\s*/, "").trim()).filter(Boolean).map((p) => (
                         <li key={p} className="flex gap-3 text-sm leading-relaxed text-muted-foreground">
                           <span
                             aria-hidden="true"
@@ -141,13 +146,13 @@ function Resume() {
             <Section title="Education">
               <ul className="space-y-5">
                 {education.map((e) => (
-                  <li key={e.title}>
+                  <li key={e.id}>
                     <div className="flex flex-wrap items-baseline justify-between gap-2">
-                      <h3 className="text-base font-semibold text-foreground">{e.title}</h3>
-                      <span className="font-mono text-xs text-muted-foreground">{e.period}</span>
+                      <h3 className="text-base font-semibold text-foreground">{e.degree}{e.field ? ` — ${e.field}` : ""}</h3>
+                      <span className="font-mono text-xs text-muted-foreground">{formatPeriod(e.start_date, e.end_date)}</span>
                     </div>
-                    <p className="mt-1 text-sm text-muted-foreground">{e.org}</p>
-                    <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{e.description}</p>
+                    {e.institution && <p className="mt-1 text-sm text-muted-foreground">{e.institution}</p>}
+                    {e.description && <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{e.description}</p>}
                   </li>
                 ))}
               </ul>
@@ -157,13 +162,13 @@ function Resume() {
               <ul className="space-y-3">
                 {certifications.map((c) => (
                   <li
-                    key={c.title}
+                    key={c.id}
                     className="flex flex-wrap items-center justify-between gap-3 border-b border-border pb-3 last:border-0 last:pb-0"
                   >
                     <span className="text-sm text-foreground">
-                      {c.title} <span className="text-muted-foreground">· {c.issuer}</span>
+                      {c.name} {c.issuer && <span className="text-muted-foreground">· {c.issuer}</span>}
                     </span>
-                    <TagChip>{c.status}</TagChip>
+                    <TagChip>{c.status.charAt(0).toUpperCase() + c.status.slice(1)}</TagChip>
                   </li>
                 ))}
               </ul>

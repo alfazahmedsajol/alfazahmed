@@ -140,3 +140,32 @@ export function toImageUrl(url?: string | null): string | null {
   const m = u.match(/drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?(?:export=\w+&)?id=)([\w-]+)/);
   return m ? `https://lh3.googleusercontent.com/d/${m[1]}` : u;
 }
+
+export const experienceQuery = queryOptions({
+  queryKey: ["public", "experience"],
+  queryFn: async () => {
+    const { data, error } = await supabase.from("experience").select("*").eq("published", true).order("sort_order");
+    if (error) throw error;
+    return data;
+  },
+});
+
+export const educationQuery = queryOptions({
+  queryKey: ["public", "education"],
+  queryFn: async () => {
+    const { data, error } = await supabase.from("education").select("*").eq("published", true).order("sort_order");
+    if (error) throw error;
+    return data;
+  },
+});
+
+const fmtMonth = (d?: string | null) =>
+  d ? new Date(d + "T00:00:00").toLocaleDateString("en-US", { month: "short", year: "numeric" }) : "";
+
+/** "Jan 2024 – Present" style period from DB dates. */
+export function formatPeriod(start?: string | null, end?: string | null, current?: boolean): string {
+  const s = fmtMonth(start);
+  const e = current ? "Present" : fmtMonth(end);
+  if (s && e) return `${s} – ${e}`;
+  return s || e || (current ? "Current" : "");
+}

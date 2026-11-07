@@ -27,7 +27,7 @@ export const Route = createFileRoute("/projects/")({
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
-    links: [{ rel: "canonical", href: "/projects" }],
+    links: [{ rel: "canonical", href: "https://alfazahmedsajol.lovable.app/projects" }],
   }),
   loader: ({ context }) => context.queryClient.ensureQueryData(projectsQuery),
   component: Projects,

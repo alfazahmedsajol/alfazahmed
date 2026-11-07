@@ -22,6 +22,7 @@ export const Route = createFileRoute("/skills")({
         content: "A category-by-category view of the technologies I work with and where I'm improving.",
       },
     ],
+    links: [{ rel: "canonical", href: "https://alfazahmedsajol.lovable.app/skills" }],
   }),
   loader: ({ context }) => context.queryClient.ensureQueryData(skillsQuery),
   component: Skills,

@@ -31,7 +31,7 @@ export const Route = createFileRoute("/projects/$slug")({
         { name: "twitter:title", content: title },
         { name: "twitter:description", content: desc },
       ],
-      links: [{ rel: "canonical", href: `/projects/${params.slug}` }],
+      links: [{ rel: "canonical", href: `https://alfazahmedsajol.lovable.app/projects/${params.slug}` }],
       scripts: [{
         type: "application/ld+json",
         children: JSON.stringify({ "@context": "https://schema.org", "@type": "CreativeWork", name: p.title, description: desc, author: { "@type": "Person", name: "Alfaz Ahmed" }, keywords: p.stack.join(", ") }),

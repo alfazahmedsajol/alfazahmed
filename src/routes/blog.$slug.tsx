@@ -26,7 +26,7 @@ export const Route = createFileRoute("/blog/$slug")({
     const title = post.seoTitle || `${post.title} — Blog | Alfaz Ahmed`;
     const desc = post.seoDescription || post.excerpt;
     const image = post.ogImage || post.cover;
-    const canonical = post.canonical || `/blog/${params.slug}`;
+    const canonical = post.canonical || `https://alfazahmedsajol.lovable.app/blog/${params.slug}`;
     return {
       meta: [
         { title },

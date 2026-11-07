@@ -31,7 +31,7 @@ export const Route = createFileRoute("/blog/")({
         content: "Lab notes, configuration decisions and automation experiments.",
       },
     ],
-    links: [{ rel: "canonical", href: "/blog" }],
+    links: [{ rel: "canonical", href: "https://alfazahmedsajol.lovable.app/blog" }],
   }),
   loader: ({ context }) => context.queryClient.ensureQueryData(blogListQuery),
   component: Blog,

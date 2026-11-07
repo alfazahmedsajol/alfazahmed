@@ -22,6 +22,7 @@ export const Route = createFileRoute("/certifications")({
         content: "MikroTik, Cisco and self-study tracks — each marked with its real status.",
       },
     ],
+    links: [{ rel: "canonical", href: "https://alfazahmedsajol.lovable.app/certifications" }],
   }),
   loader: ({ context }) => context.queryClient.ensureQueryData(certificationsQuery),
   component: Certifications,

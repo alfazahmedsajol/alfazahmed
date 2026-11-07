@@ -23,6 +23,7 @@ export const Route = createFileRoute("/services")({
         content: "MikroTik, ISP/PPPoE, OLT/FTTH, Linux, network automation and AI-assisted workflows.",
       },
     ],
+    links: [{ rel: "canonical", href: "https://alfazahmedsajol.lovable.app/services" }],
   }),
   loader: ({ context }) => context.queryClient.ensureQueryData(servicesQuery),
   component: Services,

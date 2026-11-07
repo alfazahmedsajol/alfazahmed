@@ -29,6 +29,7 @@ export const Route = createFileRoute("/contact")({
         content: "Discuss a networking, infrastructure or automation project.",
       },
     ],
+    links: [{ rel: "canonical", href: "https://alfazahmedsajol.lovable.app/contact" }],
   }),
   component: Contact,
 });
