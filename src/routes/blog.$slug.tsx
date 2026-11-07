@@ -1,6 +1,6 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { ArrowLeft, Clock, Link2, Linkedin, Twitter, Facebook } from "lucide-react";
+import { ArrowLeft, Clock, Link2, MessageCircle, Linkedin, Twitter, Facebook } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -78,13 +78,14 @@ function PostDetail() {
     .slice(0, 3)
     .map((x) => x.p);
 
-  const share = (kind: "x" | "linkedin" | "facebook" | "copy") => {
+  const share = (kind: "x" | "linkedin" | "facebook" | "whatsapp" | "copy") => {
     const url = window.location.href;
     const t = encodeURIComponent(post.title);
     const u = encodeURIComponent(url);
     if (kind === "copy") { navigator.clipboard.writeText(url).then(() => toast.success("Link copied")); return; }
     const href = kind === "x" ? `https://twitter.com/intent/tweet?text=${t}&url=${u}`
       : kind === "linkedin" ? `https://www.linkedin.com/sharing/share-offsite/?url=${u}`
+      : kind === "whatsapp" ? `https://wa.me/?text=${t}%20${u}`
       : `https://www.facebook.com/sharer/sharer.php?u=${u}`;
     window.open(href, "_blank", "noopener,noreferrer");
   };
@@ -123,6 +124,7 @@ function PostDetail() {
               <Button size="icon" variant="outline" aria-label="Share on X" onClick={() => share("x")}><Twitter className="h-4 w-4" /></Button>
               <Button size="icon" variant="outline" aria-label="Share on LinkedIn" onClick={() => share("linkedin")}><Linkedin className="h-4 w-4" /></Button>
               <Button size="icon" variant="outline" aria-label="Share on Facebook" onClick={() => share("facebook")}><Facebook className="h-4 w-4" /></Button>
+              <Button size="icon" variant="outline" aria-label="Share on WhatsApp" onClick={() => share("whatsapp")}><MessageCircle className="h-4 w-4" /></Button>
               <Button size="icon" variant="outline" aria-label="Copy link" onClick={() => share("copy")}><Link2 className="h-4 w-4" /></Button>
             </div>
 
