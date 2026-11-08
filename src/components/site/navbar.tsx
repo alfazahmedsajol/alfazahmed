@@ -28,7 +28,7 @@ export function Navbar() {
   return (
     <header
       className={`sticky top-0 z-50 border-b transition-colors ${
-        scrolled ? "border-border bg-background/90 backdrop-blur-md" : "border-transparent bg-background"
+        scrolled ? "border-border bg-background/90 backdrop-blur-md" : "border-transparent bg-transparent"
       }`}
     >
       <a
