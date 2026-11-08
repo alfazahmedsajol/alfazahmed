@@ -4,6 +4,7 @@ import { ArrowLeft, ExternalLink, Github } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { TagChip } from "@/components/site/cards";
+import { LightboxImage } from "@/components/site/lightbox-image";
 import { Markdown } from "@/components/site/markdown";
 import { Container, Eyebrow } from "@/components/site/section";
 import { projectQuery, projectsQuery } from "@/lib/cms";
@@ -91,13 +92,13 @@ function ProjectDetail() {
 
       <Container className="grid gap-12 py-14 sm:py-20 lg:grid-cols-[minmax(0,1fr)_280px]">
         <div className="min-w-0 space-y-10">
-          {project.cover && <img src={project.cover} alt={`${project.title} cover`} loading="lazy" className="w-full rounded-lg border border-border" />}
+          {project.cover && <LightboxImage src={project.cover} alt={`${project.title} cover`} className="w-full rounded-lg border border-border" />}
           <Block title="Problem" text={project.problem} />
           <Block title="Objective" text={project.objective} />
           <Block title="Architecture" text={project.architecture} />
           {project.diagram && (
             <figure>
-              <img src={project.diagram} alt={`${project.title} architecture diagram`} loading="lazy" className="w-full rounded-lg border border-border bg-surface" />
+              <LightboxImage src={project.diagram} alt={`${project.title} architecture diagram`} className="w-full rounded-lg border border-border bg-surface" />
               <figcaption className="mt-2 text-xs text-muted-foreground">Architecture diagram</figcaption>
             </figure>
           )}

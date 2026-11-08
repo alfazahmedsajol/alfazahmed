@@ -17,6 +17,7 @@ import { Route as CertificationsRouteImport } from './routes/certifications'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as ResumeRouteImport } from './routes/resume'
+import { Route as RssDotxmlRouteImport } from './routes/rss[.]xml'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SkillsRouteImport } from './routes/skills'
@@ -70,6 +71,11 @@ const PrivacyRoute = PrivacyRouteImport.update({
 const ResumeRoute = ResumeRouteImport.update({
   id: '/resume',
   path: '/resume',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RssDotxmlRoute = RssDotxmlRouteImport.update({
+  id: '/rss.xml',
+  path: '/rss.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ServicesRoute = ServicesRouteImport.update({
@@ -159,6 +165,7 @@ export interface FileRoutesByFullPath {
   '/contact': typeof ContactRoute
   '/privacy': typeof PrivacyRoute
   '/resume': typeof ResumeRoute
+  '/rss.xml': typeof RssDotxmlRoute
   '/services': typeof ServicesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/skills': typeof SkillsRoute
@@ -183,6 +190,7 @@ export interface FileRoutesByTo {
   '/contact': typeof ContactRoute
   '/privacy': typeof PrivacyRoute
   '/resume': typeof ResumeRoute
+  '/rss.xml': typeof RssDotxmlRoute
   '/services': typeof ServicesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/skills': typeof SkillsRoute
@@ -208,6 +216,7 @@ export interface FileRoutesById {
   '/contact': typeof ContactRoute
   '/privacy': typeof PrivacyRoute
   '/resume': typeof ResumeRoute
+  '/rss.xml': typeof RssDotxmlRoute
   '/services': typeof ServicesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/skills': typeof SkillsRoute
@@ -234,6 +243,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/privacy'
     | '/resume'
+    | '/rss.xml'
     | '/services'
     | '/sitemap.xml'
     | '/skills'
@@ -258,6 +268,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/privacy'
     | '/resume'
+    | '/rss.xml'
     | '/services'
     | '/sitemap.xml'
     | '/skills'
@@ -282,6 +293,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/privacy'
     | '/resume'
+    | '/rss.xml'
     | '/services'
     | '/sitemap.xml'
     | '/skills'
@@ -308,6 +320,7 @@ export interface RootRouteChildren {
   ContactRoute: typeof ContactRoute
   PrivacyRoute: typeof PrivacyRoute
   ResumeRoute: typeof ResumeRoute
+  RssDotxmlRoute: typeof RssDotxmlRoute
   ServicesRoute: typeof ServicesRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   SkillsRoute: typeof SkillsRoute
@@ -375,6 +388,13 @@ declare module '@tanstack/react-router' {
       path: '/resume'
       fullPath: '/resume'
       preLoaderRoute: typeof ResumeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/rss.xml': {
+      id: '/rss.xml'
+      path: '/rss.xml'
+      fullPath: '/rss.xml'
+      preLoaderRoute: typeof RssDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/services': {
@@ -524,6 +544,7 @@ const rootRouteChildren: RootRouteChildren = {
   ContactRoute: ContactRoute,
   PrivacyRoute: PrivacyRoute,
   ResumeRoute: ResumeRoute,
+  RssDotxmlRoute: RssDotxmlRoute,
   ServicesRoute: ServicesRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   SkillsRoute: SkillsRoute,
