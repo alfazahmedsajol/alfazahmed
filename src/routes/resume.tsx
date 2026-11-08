@@ -7,7 +7,7 @@ import { Reveal } from "@/components/site/reveal";
 import { Container, PageHeader } from "@/components/site/section";
 import { resumeSummary } from "@/data/resume";
 import { useQuery } from "@tanstack/react-query";
-import { certificationsQuery, educationQuery, experienceQuery, formatPeriod, projectsQuery, settingsQuery } from "@/lib/cms";
+import { certificationsQuery, educationQuery, experienceQuery, formatPeriod, projectsQuery, settingsQuery, toImageUrl } from "@/lib/cms";
 import { skillCategories } from "@/data/skills";
 import { site } from "@/data/site";
 
@@ -182,7 +182,7 @@ function Resume() {
 
 function CvButton() {
   const { data } = useQuery(settingsQuery);
-  const url = (data?.general?.["resume_url"] ?? "").trim();
+  const url = toImageUrl(data?.general?.["resume_url"]) ?? "";
   if (!url) {
     return (
       <Button disabled title="CV not available yet">

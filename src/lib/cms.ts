@@ -137,6 +137,9 @@ export const settingsQuery = queryOptions({
 export function toImageUrl(url?: string | null): string | null {
   const u = (url ?? "").trim();
   if (!u) return null;
+  // Our own media links: strip any host (preview/published domain) so they always load from the current site.
+  const own = u.match(/^https?:\/\/[^/]+(\/api\/public\/media\/.+)$/);
+  if (own) return own[1];
   const m = u.match(/drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?(?:export=\w+&)?id=)([\w-]+)/);
   return m ? `https://lh3.googleusercontent.com/d/${m[1]}` : u;
 }

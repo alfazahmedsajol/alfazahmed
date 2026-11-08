@@ -79,7 +79,7 @@ function MediaLibrary() {
                     <p className="truncate text-xs" title={m.file_name}>{m.file_name}</p>
                     <p className="font-mono text-[0.65rem] text-muted-foreground">{m.path.split("/")[0]} · {Math.round((m.size_bytes ?? 0) / 1024)} KB</p>
                     <div className="mt-2 flex gap-1">
-                      <Button size="sm" variant="outline" aria-label={`Copy link for ${m.file_name}`} onClick={() => { navigator.clipboard.writeText(window.location.origin + url); toast.success("Link copied"); }}><Copy className="h-3.5 w-3.5" /></Button>
+                      <Button size="sm" variant="outline" aria-label={`Copy link for ${m.file_name}`} onClick={() => { navigator.clipboard.writeText(url); toast.success("Link copied"); }}><Copy className="h-3.5 w-3.5" /></Button>
                       <Button size="sm" variant="outline" aria-label={`Delete ${m.file_name}`} onClick={() => { if (confirm(`Delete ${m.file_name}?`)) del.mutate(m); }}><Trash2 className="h-3.5 w-3.5" /></Button>
                     </div>
                   </div>
