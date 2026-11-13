@@ -32,6 +32,7 @@ import { Route as AuthenticatedAdminSectionRouteImport } from './routes/_authent
 import { Route as AuthenticatedAdminMediaRouteImport } from './routes/_authenticated/admin.media'
 import { Route as AuthenticatedAdminMessagesRouteImport } from './routes/_authenticated/admin.messages'
 import { Route as AuthenticatedAdminSettingsRouteImport } from './routes/_authenticated/admin.settings'
+import { Route as ApiPublicChatRouteImport } from './routes/api/public/chat'
 import { Route as ApiPublicMediaSplatRouteImport } from './routes/api/public/media.$'
 import { Route as ApiPublicV1BlogRouteImport } from './routes/api/public/v1/blog'
 
@@ -152,6 +153,11 @@ const AuthenticatedAdminSettingsRoute =
     path: '/settings',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const ApiPublicChatRoute = ApiPublicChatRouteImport.update({
+  id: '/api/public/chat',
+  path: '/api/public/chat',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicMediaSplatRoute = ApiPublicMediaSplatRouteImport.update({
   id: '/api/public/media/$',
   path: '/api/public/media/$',
@@ -185,6 +191,7 @@ export interface FileRoutesByFullPath {
   '/admin/media': typeof AuthenticatedAdminMediaRoute
   '/admin/messages': typeof AuthenticatedAdminMessagesRoute
   '/admin/settings': typeof AuthenticatedAdminSettingsRoute
+  '/api/public/chat': typeof ApiPublicChatRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/api/public/media/$': typeof ApiPublicMediaSplatRoute
   '/api/public/v1/blog': typeof ApiPublicV1BlogRoute
@@ -210,6 +217,7 @@ export interface FileRoutesByTo {
   '/admin/media': typeof AuthenticatedAdminMediaRoute
   '/admin/messages': typeof AuthenticatedAdminMessagesRoute
   '/admin/settings': typeof AuthenticatedAdminSettingsRoute
+  '/api/public/chat': typeof ApiPublicChatRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/api/public/media/$': typeof ApiPublicMediaSplatRoute
   '/api/public/v1/blog': typeof ApiPublicV1BlogRoute
@@ -238,6 +246,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/media': typeof AuthenticatedAdminMediaRoute
   '/_authenticated/admin/messages': typeof AuthenticatedAdminMessagesRoute
   '/_authenticated/admin/settings': typeof AuthenticatedAdminSettingsRoute
+  '/api/public/chat': typeof ApiPublicChatRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/api/public/media/$': typeof ApiPublicMediaSplatRoute
   '/api/public/v1/blog': typeof ApiPublicV1BlogRoute
@@ -266,6 +275,7 @@ export interface FileRouteTypes {
     | '/admin/media'
     | '/admin/messages'
     | '/admin/settings'
+    | '/api/public/chat'
     | '/admin/'
     | '/api/public/media/$'
     | '/api/public/v1/blog'
@@ -291,6 +301,7 @@ export interface FileRouteTypes {
     | '/admin/media'
     | '/admin/messages'
     | '/admin/settings'
+    | '/api/public/chat'
     | '/admin'
     | '/api/public/media/$'
     | '/api/public/v1/blog'
@@ -318,6 +329,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/media'
     | '/_authenticated/admin/messages'
     | '/_authenticated/admin/settings'
+    | '/api/public/chat'
     | '/_authenticated/admin/'
     | '/api/public/media/$'
     | '/api/public/v1/blog'
@@ -341,6 +353,7 @@ export interface RootRouteChildren {
   ProjectsSlugRoute: typeof ProjectsSlugRoute
   BlogIndexRoute: typeof BlogIndexRoute
   ProjectsIndexRoute: typeof ProjectsIndexRoute
+  ApiPublicChatRoute: typeof ApiPublicChatRoute
   ApiPublicMediaSplatRoute: typeof ApiPublicMediaSplatRoute
   ApiPublicV1BlogRoute: typeof ApiPublicV1BlogRoute
 }
@@ -508,6 +521,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminSettingsRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/api/public/chat': {
+      id: '/api/public/chat'
+      path: '/api/public/chat'
+      fullPath: '/api/public/chat'
+      preLoaderRoute: typeof ApiPublicChatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/media/$': {
       id: '/api/public/media/$'
       path: '/api/public/media/$'
@@ -573,6 +593,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProjectsSlugRoute: ProjectsSlugRoute,
   BlogIndexRoute: BlogIndexRoute,
   ProjectsIndexRoute: ProjectsIndexRoute,
+  ApiPublicChatRoute: ApiPublicChatRoute,
   ApiPublicMediaSplatRoute: ApiPublicMediaSplatRoute,
   ApiPublicV1BlogRoute: ApiPublicV1BlogRoute,
 }
