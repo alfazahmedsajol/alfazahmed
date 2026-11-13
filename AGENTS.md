@@ -15,3 +15,4 @@
 - Shared site chrome and presentational primitives live in `src/components/site/`; the navbar/footer shell is mounted once in `src/routes/__root.tsx` so every route inherits it.
 - Admin access: roles in user_roles + is_admin(); owner email self-claims admin via claim_owner_admin() RPC — no client-side role checks.
 - Uploaded files live in the private "media" storage bucket (admin-only read/write via is_admin(); visitors get files only through the server proxy) and are served through /api/public/media/$path because the workspace blocks public buckets.
+- Automation API: POST /api/public/v1/blog authenticates via x-api-key compared against a SHA-256 hash stored in site_settings key "api" (admin-only row); the raw key is shown once in admin and never stored.
