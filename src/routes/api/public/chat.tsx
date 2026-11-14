@@ -23,7 +23,7 @@ function extractReply(data: unknown): string | null {
     for (const k of ["output", "reply", "text", "message", "response", "answer"]) {
       if (typeof o[k] === "string" && (o[k] as string).trim()) return o[k] as string;
     }
-    if (o.json) return extractReply(o.json);
+    if (o["json"]) return extractReply(o["json"]);
   }
   return null;
 }

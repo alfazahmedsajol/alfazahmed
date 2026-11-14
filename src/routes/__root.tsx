@@ -16,6 +16,7 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Navbar } from "@/components/site/navbar";
 import { Footer } from "@/components/site/footer";
+import { ChatWidget } from "@/components/site/chat-widget";
 import { Toaster } from "@/components/ui/sonner";
 
 function NotFoundComponent() {
@@ -139,6 +140,7 @@ function RootComponent() {
           <Outlet />
         </main>
         {!isAdmin && <Footer />}
+        {!isAdmin && <ChatWidget />}
       </div>
       <Toaster />
     </QueryClientProvider>

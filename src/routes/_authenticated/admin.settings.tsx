@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { ApiSettings } from "@/components/admin/api-settings";
+import { ChatSettings } from "@/components/admin/chat-settings";
 import type { Json } from "@/integrations/supabase/types";
 
 export const Route = createFileRoute("/_authenticated/admin/settings")({
@@ -42,6 +43,7 @@ function Settings() {
       <Group settingKey="general" title="General" fields={GENERAL} />
       <Group settingKey="seo" title="SEO defaults" fields={SEO} />
       <SocialLinks />
+      <ChatSettings />
       <ApiSettings />
     </div>
   );
