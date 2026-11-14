@@ -38,12 +38,12 @@ export function Navbar() {
         Skip to content
       </a>
       <Container className="flex h-16 items-center justify-between gap-4 lg:h-20">
-        <Link to="/" className="group flex items-center gap-3" aria-label={`${site.brand}, home`}>
-          <span className="flex h-9 w-9 items-center justify-center rounded-md border border-border bg-surface text-primary transition-colors group-hover:border-primary/50">
+        <Link to="/" className="group flex min-w-0 items-center gap-3" aria-label={`${site.brand}, home`}>
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-border bg-surface text-primary transition-colors group-hover:border-primary/50">
             <Network className="h-4.5 w-4.5" aria-hidden="true" />
           </span>
-          <span className="leading-tight">
-            <span className="block font-display text-sm font-semibold text-foreground sm:text-[0.95rem]">
+          <span className="min-w-0 leading-tight">
+            <span className="block truncate font-display text-[0.8rem] font-semibold text-foreground sm:text-[0.95rem]">
               AI-Powered Networking &amp; Automation
             </span>
             <span className="block font-mono text-[0.68rem] uppercase tracking-[0.18em] text-muted-foreground">

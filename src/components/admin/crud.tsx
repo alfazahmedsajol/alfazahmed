@@ -201,7 +201,7 @@ export function CrudPage({ config }: { config: CrudConfig }) {
       </div>
 
       <div className="mt-6 flex flex-wrap items-center gap-3">
-        <Input placeholder="Search…" value={search} onChange={(e) => { setSearch(e.target.value); setPage(0); }} className="max-w-xs" />
+        <Input placeholder="Search…" value={search} onChange={(e) => { setSearch(e.target.value); setPage(0); }} className="w-full sm:max-w-xs" />
         {config.publishKey && (["all", "published", "draft", ...(config.featuredKey ? ["featured"] : [])] as const).map((f) => (
           <Button key={f} size="sm" variant={filter === f ? "default" : "outline"} onClick={() => { setFilter(f as typeof filter); setPage(0); }}>
             {f[0]!.toUpperCase() + f.slice(1)}
@@ -231,7 +231,7 @@ export function CrudPage({ config }: { config: CrudConfig }) {
             <tbody className="divide-y divide-border">
               {shown.map((r) => (
                 <tr key={r.id}>
-                  {config.columns.map((c) => <td key={c} className="max-w-xs truncate p-3">{cell(r, c)}</td>)}
+                  {config.columns.map((c) => <td key={c} className="max-w-[10rem] truncate p-3 sm:max-w-xs">{cell(r, c)}</td>)}
                   {config.publishKey && <td className="p-3"><Switch checked={isPub(r)} onCheckedChange={() => togglePub(r)} aria-label="Published" /></td>}
                   {config.featuredKey && <td className="p-3"><Switch checked={!!r[config.featuredKey]} onCheckedChange={(v) => patch.mutate({ id: r.id, values: { [config.featuredKey!]: v } })} aria-label="Featured" /></td>}
                   <td className="whitespace-nowrap p-3 text-right">
@@ -257,7 +257,7 @@ export function CrudPage({ config }: { config: CrudConfig }) {
       )}
 
       <Dialog open={!!editing} onOpenChange={(o) => !o && setEditing(null)}>
-        <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto">
+        <DialogContent className="max-h-[92vh] w-[calc(100vw-1rem)] max-w-2xl overflow-y-auto p-4 sm:p-6">
           <DialogHeader><DialogTitle>{editing?.id ? "Edit" : "Add"} {config.singular.toLowerCase()}</DialogTitle></DialogHeader>
           {editing && <EditForm config={config} initial={editing} rels={rels.data ?? {}} saving={save.isPending} onSave={(r) => save.mutate(r)} />}
         </DialogContent>
