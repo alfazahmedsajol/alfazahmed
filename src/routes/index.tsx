@@ -137,7 +137,7 @@ function Home() {
       <section className="border-b border-border bg-surface/30 py-16 sm:py-20">
         <Container>
           <SectionHeading
-            eyebrow="Core skills"
+            eyebrow="Skills"
             title="The technologies I work with every week"
             description="Each area below has its own breakdown on the skills page."
           />

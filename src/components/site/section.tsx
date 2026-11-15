@@ -11,8 +11,8 @@ export function Container({ children, className }: { children: ReactNode; classN
 
 export function Eyebrow({ children }: { children: ReactNode }) {
   return (
-    <span className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.2em] text-primary">
-      <span aria-hidden="true" className="h-px w-6 bg-primary" />
+    <span className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3.5 py-1.5 font-mono text-xs font-semibold uppercase tracking-[0.2em] text-primary shadow-[0_0_18px_-6px_var(--color-primary)] sm:text-[0.8rem]">
+      <span aria-hidden="true" className="h-1.5 w-1.5 animate-pulse rounded-full bg-primary" />
       {children}
     </span>
   );
