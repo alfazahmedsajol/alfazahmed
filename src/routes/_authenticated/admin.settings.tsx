@@ -2,18 +2,28 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { Settings2, Search, MessageCircle, Zap } from "lucide-react";
 
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { ApiSettings } from "@/components/admin/api-settings";
 import { ChatSettings } from "@/components/admin/chat-settings";
 import type { Json } from "@/integrations/supabase/types";
 
 export const Route = createFileRoute("/_authenticated/admin/settings")({
-  head: () => ({ meta: [{ title: "Site & SEO settings — Admin" }, { name: "robots", content: "noindex" }] }),
+  head: () => ({ meta: [
+    { title: "Site & SEO settings — Alfaz Ahmed Admin" },
+    { name: "description", content: "Manage Alfaz Ahmed’s site, SEO, social links, visitor chat and automation settings." },
+    { property: "og:title", content: "Site & SEO settings — Alfaz Ahmed Admin" },
+    { property: "og:description", content: "Manage site, SEO, social links, visitor chat and automation settings." },
+    { property: "og:type", content: "website" },
+    { name: "twitter:card", content: "summary" },
+    { name: "robots", content: "noindex" },
+  ] }),
   component: Settings,
 });
 
@@ -38,13 +48,29 @@ const SEO: F[] = [
 
 function Settings() {
   return (
-    <div className="mx-auto w-full max-w-4xl space-y-10">
+    <div className="mx-auto w-full min-w-0 max-w-4xl space-y-6">
       <h1 className="font-display text-2xl font-semibold">Site & SEO settings</h1>
-      <Group settingKey="general" title="General" fields={GENERAL} />
-      <Group settingKey="seo" title="SEO defaults" fields={SEO} />
-      <SocialLinks />
-      <ChatSettings />
-      <ApiSettings />
+      <Tabs defaultValue="general" className="min-w-0">
+        <TabsList aria-label="Settings sections" className="grid h-auto w-full grid-cols-2 gap-1 sm:grid-cols-4">
+          <TabsTrigger value="general" className="min-h-11 gap-2 px-2"><Settings2 className="size-4 shrink-0" aria-hidden="true" />General</TabsTrigger>
+          <TabsTrigger value="seo" className="min-h-11 gap-2 px-2"><Search className="size-4 shrink-0" aria-hidden="true" />SEO & Social</TabsTrigger>
+          <TabsTrigger value="chat" className="min-h-11 gap-2 px-2"><MessageCircle className="size-4 shrink-0" aria-hidden="true" />Visitor Chat</TabsTrigger>
+          <TabsTrigger value="api" className="min-h-11 gap-2 px-2"><Zap className="size-4 shrink-0" aria-hidden="true" />API & Automation</TabsTrigger>
+        </TabsList>
+        <TabsContent value="general" forceMount className="mt-6 data-[state=inactive]:hidden">
+          <Group settingKey="general" title="General" fields={GENERAL} />
+        </TabsContent>
+        <TabsContent value="seo" forceMount className="mt-6 space-y-6 data-[state=inactive]:hidden">
+          <Group settingKey="seo" title="SEO defaults" fields={SEO} />
+          <SocialLinks />
+        </TabsContent>
+        <TabsContent value="chat" forceMount className="mt-6 data-[state=inactive]:hidden">
+          <ChatSettings />
+        </TabsContent>
+        <TabsContent value="api" forceMount className="mt-6 data-[state=inactive]:hidden">
+          <ApiSettings />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }

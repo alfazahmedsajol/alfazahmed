@@ -1,4 +1,5 @@
 # Roadmap
+- [x] Organize Settings into mobile-friendly General, SEO & Social, Visitor Chat, and API & Automation tabs; signed-in navigation verified at desktop, tablet and phone sizes.
 - [x] Admin CRUD for all content, blog CMS, messages, contact form
 - [x] Projects in database; public Projects/Home/Resume read from it (case study, filters, pagination)
 - [x] File uploads (private bucket, admin-only write, public read proxy) + Media library
