@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { createClient } from "@supabase/supabase-js";
 
-const STATIC = ["/", "/about", "/skills", "/services", "/projects", "/blog", "/certifications", "/resume", "/contact", "/privacy", "/terms"];
+const STATIC = ["/", "/about", "/skills", "/services", "/projects", "/lab", "/blog", "/certifications", "/resume", "/contact", "/privacy", "/terms"];
 
 export const Route = createFileRoute("/sitemap.xml")({
   server: {

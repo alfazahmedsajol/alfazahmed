@@ -15,6 +15,7 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as CertificationsRouteImport } from './routes/certifications'
 import { Route as ContactRouteImport } from './routes/contact'
+import { Route as LabRouteImport } from './routes/lab'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as ResumeRouteImport } from './routes/resume'
 import { Route as RssDotxmlRouteImport } from './routes/rss[.]xml'
@@ -63,6 +64,11 @@ const CertificationsRoute = CertificationsRouteImport.update({
 const ContactRoute = ContactRouteImport.update({
   id: '/contact',
   path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LabRoute = LabRouteImport.update({
+  id: '/lab',
+  path: '/lab',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PrivacyRoute = PrivacyRouteImport.update({
@@ -175,6 +181,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/certifications': typeof CertificationsRoute
   '/contact': typeof ContactRoute
+  '/lab': typeof LabRoute
   '/privacy': typeof PrivacyRoute
   '/resume': typeof ResumeRoute
   '/rss.xml': typeof RssDotxmlRoute
@@ -202,6 +209,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/certifications': typeof CertificationsRoute
   '/contact': typeof ContactRoute
+  '/lab': typeof LabRoute
   '/privacy': typeof PrivacyRoute
   '/resume': typeof ResumeRoute
   '/rss.xml': typeof RssDotxmlRoute
@@ -230,6 +238,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/certifications': typeof CertificationsRoute
   '/contact': typeof ContactRoute
+  '/lab': typeof LabRoute
   '/privacy': typeof PrivacyRoute
   '/resume': typeof ResumeRoute
   '/rss.xml': typeof RssDotxmlRoute
@@ -259,6 +268,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/certifications'
     | '/contact'
+    | '/lab'
     | '/privacy'
     | '/resume'
     | '/rss.xml'
@@ -286,6 +296,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/certifications'
     | '/contact'
+    | '/lab'
     | '/privacy'
     | '/resume'
     | '/rss.xml'
@@ -313,6 +324,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/certifications'
     | '/contact'
+    | '/lab'
     | '/privacy'
     | '/resume'
     | '/rss.xml'
@@ -342,6 +354,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   CertificationsRoute: typeof CertificationsRoute
   ContactRoute: typeof ContactRoute
+  LabRoute: typeof LabRoute
   PrivacyRoute: typeof PrivacyRoute
   ResumeRoute: typeof ResumeRoute
   RssDotxmlRoute: typeof RssDotxmlRoute
@@ -400,6 +413,13 @@ declare module '@tanstack/react-router' {
       path: '/contact'
       fullPath: '/contact'
       preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/lab': {
+      id: '/lab'
+      path: '/lab'
+      fullPath: '/lab'
+      preLoaderRoute: typeof LabRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/privacy': {
@@ -582,6 +602,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   CertificationsRoute: CertificationsRoute,
   ContactRoute: ContactRoute,
+  LabRoute: LabRoute,
   PrivacyRoute: PrivacyRoute,
   ResumeRoute: ResumeRoute,
   RssDotxmlRoute: RssDotxmlRoute,
