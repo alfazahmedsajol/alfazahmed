@@ -163,26 +163,6 @@ function Home() {
         </Container>
       </section>
 
-      {/* Lab teaser */}
-      <section className="border-b border-border py-16 sm:py-20">
-        <Container>
-          <Reveal>
-            <Link to="/lab" className="panel panel-hover group grid gap-6 p-6 sm:p-10 md:grid-cols-[auto_1fr_auto] md:items-center">
-              <span className="flex h-14 w-14 items-center justify-center rounded-xl border border-primary/40 bg-primary/10 text-primary shadow-[0_0_24px_-6px_var(--color-primary)]">
-                <FlaskConical className="h-7 w-7" aria-hidden="true" />
-              </span>
-              <div>
-                <p className="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-primary">Inside the Lab</p>
-                <h2 className="mt-2 text-2xl font-semibold text-foreground sm:text-3xl">My ISP network & automation lab</h2>
-                <p className="mt-2 text-sm text-muted-foreground">Dual-IIG BGP topology, MikroTik & GNS3/CHR emulation, n8n automation and monitoring.</p>
-                <div className="mt-4 flex flex-wrap gap-2">{["RouterOS v7", "BGP / OSPF", "GNS3", "n8n"].map((t) => <TagChip key={t}>{t}</TagChip>)}</div>
-              </div>
-              <span className="inline-flex items-center text-sm font-medium text-primary">Explore the lab <ArrowRight className="ml-1.5 h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden="true" /></span>
-            </Link>
-          </Reveal>
-        </Container>
-      </section>
-
       {/* Featured projects */}
       <section className="border-b border-border py-16 sm:py-20">
         <Container>
@@ -209,6 +189,26 @@ function Home() {
                 View all projects <ArrowRight className="ml-1.5 h-4 w-4" aria-hidden="true" />
               </Link>
             </Button>
+          </Reveal>
+        </Container>
+      </section>
+
+      {/* Lab teaser */}
+      <section className="border-b border-border py-16 sm:py-20">
+        <Container>
+          <Reveal>
+            <Link to="/lab" className="panel panel-hover group grid gap-6 p-6 sm:p-10 md:grid-cols-[auto_1fr_auto] md:items-center">
+              <span className="flex h-14 w-14 items-center justify-center rounded-xl border border-primary/40 bg-primary/10 text-primary shadow-[0_0_24px_-6px_var(--color-primary)]">
+                <FlaskConical className="h-7 w-7" aria-hidden="true" />
+              </span>
+              <div>
+                <p className="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-primary">Inside the Lab</p>
+                <h2 className="mt-2 text-2xl font-semibold text-foreground sm:text-3xl">My ISP network & automation lab</h2>
+                <p className="mt-2 text-sm text-muted-foreground">Dual-IIG BGP topology, MikroTik & GNS3/CHR emulation, n8n automation and monitoring.</p>
+                <div className="mt-4 flex flex-wrap gap-2">{["RouterOS v7", "BGP / OSPF", "GNS3", "n8n"].map((t) => <TagChip key={t}>{t}</TagChip>)}</div>
+              </div>
+              <span className="inline-flex items-center text-sm font-medium text-primary">Explore the lab <ArrowRight className="ml-1.5 h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden="true" /></span>
+            </Link>
           </Reveal>
         </Container>
       </section>
