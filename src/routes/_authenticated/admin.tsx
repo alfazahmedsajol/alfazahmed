@@ -2,7 +2,7 @@ import { createFileRoute, Link, Outlet, useNavigate } from "@tanstack/react-rout
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   LayoutDashboard, FileText, FolderTree, Briefcase, Layers, Zap, Tags, Wrench, Award,
-  Mail, BriefcaseBusiness, GraduationCap, Image, Settings, LogOut, Menu, type LucideIcon,
+  Mail, BriefcaseBusiness, GraduationCap, Image, Settings, LogOut, Network, Menu, type LucideIcon,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -29,7 +29,7 @@ export const Route = createFileRoute("/_authenticated/admin")({
 const icons: Record<string, LucideIcon> = {
   blog: FileText, "blog-categories": FolderTree, projects: Briefcase, "project-categories": Layers,
   skills: Zap, "skill-categories": Tags, services: Wrench, certifications: Award, messages: Mail,
-  experience: BriefcaseBusiness, education: GraduationCap, media: Image, settings: Settings,
+  experience: BriefcaseBusiness, education: GraduationCap, media: Image, settings: Settings, lab: Network,
 };
 
 const linkCls =

@@ -3,7 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 export const MEDIA_BUCKET = "media";
 export const MAX_UPLOAD_BYTES = 10 * 1024 * 1024;
 export const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif", "application/pdf"];
-export const MEDIA_FOLDERS = ["profile", "projects", "blog", "certificates", "diagrams", "resume", "general"] as const;
+export const MEDIA_FOLDERS = ["profile", "projects", "blog", "certificates", "diagrams", "resume", "lab", "general"] as const;
 
 /** Public URL served through the site's own media endpoint (bucket stays private; read policy allows anon). */
 export const mediaUrl = (path: string) => `/api/public/media/${path.split("/").map(encodeURIComponent).join("/")}`;

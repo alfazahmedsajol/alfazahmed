@@ -172,3 +172,12 @@ export function formatPeriod(start?: string | null, end?: string | null, current
   if (s && e) return `${s} – ${e}`;
   return s || e || (current ? "Current" : "");
 }
+
+export const labQuery = queryOptions({
+  queryKey: ["public", "lab"],
+  queryFn: async () => {
+    const { mergeLab } = await import("@/data/lab");
+    const { data } = await supabase.from("site_settings").select("value").eq("key", "lab").maybeSingle();
+    return mergeLab(data?.value);
+  },
+});

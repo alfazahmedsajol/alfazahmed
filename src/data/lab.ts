@@ -126,3 +126,31 @@ export const experiments: Experiment[] = [
   { title: "MPLS Testing", description: "LDP and L3VPN basics on a CHR emulation topology.", chips: ["MPLS", "GNS3"], status: "experiment", link: { label: "See project writeup", to: "/projects" } },
   { title: "n8n Network Automation", description: "Alert triage and scheduled config backups via n8n.", chips: ["n8n", "Python"], status: "progress", link: { label: "Read configuration guide", to: "/blog" } },
 ];
+
+export type LabPhoto = { url: string; caption: string };
+export type LabGroup = { title: string; items: GearItem[] };
+export type LabContent = {
+  intro: { title: string; purpose: string; principles: string[] };
+  topologyTiers: { name: string; nodes: TopologyNode[] }[];
+  gearGroups: LabGroup[];
+  serviceGroups: LabGroup[];
+  experiments: Experiment[];
+  photos: LabPhoto[];
+};
+
+/** Defaults used until the admin saves lab content (site_settings key "lab"). */
+export const defaultLab: LabContent = {
+  intro: labIntro, topologyTiers, gearGroups, serviceGroups, experiments, photos: [],
+};
+
+export function mergeLab(v: unknown): LabContent {
+  const o = (v && typeof v === "object" ? v : {}) as Partial<LabContent>;
+  return {
+    intro: { ...defaultLab.intro, ...(o.intro ?? {}) },
+    topologyTiers: Array.isArray(o.topologyTiers) ? o.topologyTiers : defaultLab.topologyTiers,
+    gearGroups: Array.isArray(o.gearGroups) ? o.gearGroups : defaultLab.gearGroups,
+    serviceGroups: Array.isArray(o.serviceGroups) ? o.serviceGroups : defaultLab.serviceGroups,
+    experiments: Array.isArray(o.experiments) ? o.experiments : defaultLab.experiments,
+    photos: Array.isArray(o.photos) ? o.photos : [],
+  };
+}

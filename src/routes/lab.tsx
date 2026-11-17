@@ -7,10 +7,10 @@ import { Reveal } from "@/components/site/reveal";
 import { Container, PageHeader, SectionHeading } from "@/components/site/section";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import {
-  experiments, gearGroups, labIntro, labStatusLabel, serviceGroups, topologyTiers,
-  type GearItem, type LabStatus, type TopologyNode,
-} from "@/data/lab";
+import { labStatusLabel, type GearItem, type LabStatus, type TopologyNode, type LabContent } from "@/data/lab";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { labQuery, toImageUrl } from "@/lib/cms";
+import { LightboxImage } from "@/components/site/lightbox-image";
 import { cn } from "@/lib/utils";
 
 const URL = "https://alfazahmedsajol.lovable.app/lab";
@@ -29,6 +29,9 @@ export const Route = createFileRoute("/lab")({
     ],
     links: [{ rel: "canonical", href: URL }],
   }),
+  loader: ({ context }) => context.queryClient.ensureQueryData(labQuery),
+  errorComponent: () => <Container className="py-20"><p className="text-muted-foreground">Couldn't load the lab right now.</p></Container>,
+  notFoundComponent: () => <Container className="py-20"><p>Not found.</p></Container>,
   component: LabPage,
 });
 
@@ -47,10 +50,10 @@ export function StatusBadge({ status }: { status: LabStatus }) {
   );
 }
 
-function Topology({ selected, onSelect, large }: { selected: string; onSelect: (n: TopologyNode) => void; large?: boolean }) {
+function Topology({ tiers, selected, onSelect, large }: { tiers: LabContent["topologyTiers"]; selected: string; onSelect: (n: TopologyNode) => void; large?: boolean }) {
   return (
     <div className="flex flex-col items-center gap-2">
-      {topologyTiers.map((tier, ti) => (
+      {tiers.map((tier, ti) => (
         <div key={tier.name} className="flex w-full flex-col items-center gap-2">
           {ti > 0 && <div aria-hidden="true" className="h-6 w-0.5 bg-gradient-to-b from-primary/70 to-primary/20" />}
           <p className="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-muted-foreground">{tier.name}</p>
@@ -120,7 +123,9 @@ function Groups({ groups }: { groups: { title: string; items: GearItem[] }[] }) 
 }
 
 function LabPage() {
-  const first = topologyTiers[1]!.nodes[0]!;
+  const { data: lab } = useSuspenseQuery(labQuery);
+  const { intro: labIntro, topologyTiers, gearGroups, serviceGroups, experiments, photos } = lab;
+  const first = topologyTiers.flatMap((t) => t.nodes)[0] ?? { id: "", label: "", role: "", details: [], chips: [] };
   const [node, setNode] = useState<TopologyNode>(first);
   const [full, setFull] = useState(false);
 
@@ -140,7 +145,7 @@ function LabPage() {
             <Button variant="outline" onClick={() => setFull(true)}><Maximize2 className="mr-1.5 h-4 w-4" /> Fullscreen</Button>
           </div>
           <div className="mt-10 grid gap-6 lg:grid-cols-[1fr_20rem]">
-            <div className="panel overflow-x-auto p-6"><Topology selected={node.id} onSelect={setNode} /></div>
+            <div className="panel overflow-x-auto p-6"><Topology tiers={topologyTiers} selected={node.id} onSelect={setNode} /></div>
             <NodeDetails node={node} />
           </div>
         </Container>
@@ -150,11 +155,27 @@ function LabPage() {
         <DialogContent className="max-h-[94vh] w-[calc(100vw-1rem)] max-w-6xl overflow-auto">
           <DialogTitle>Lab topology</DialogTitle>
           <div className="grid gap-6 lg:grid-cols-[1fr_20rem]">
-            <div className="py-4"><Topology selected={node.id} onSelect={setNode} large /></div>
+            <div className="py-4"><Topology tiers={topologyTiers} selected={node.id} onSelect={setNode} large /></div>
             <NodeDetails node={node} />
           </div>
         </DialogContent>
       </Dialog>
+
+      {photos.length > 0 && (
+        <section className="border-b border-border py-16 sm:py-20">
+          <Container>
+            <SectionHeading eyebrow="Gallery" title="Physical rack & setup" description="Real photos from the lab. Click to zoom." />
+            <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {photos.map((p, i) => (
+                <figure key={p.url + i} className="panel overflow-hidden">
+                  <LightboxImage src={toImageUrl(p.url) ?? p.url} alt={p.caption || "Lab photo"} className="aspect-[4/3] w-full object-cover" />
+                  {p.caption && <figcaption className="p-3 text-sm text-muted-foreground">{p.caption}</figcaption>}
+                </figure>
+              ))}
+            </div>
+          </Container>
+        </section>
+      )}
 
       <section className="border-b border-border bg-surface/30 py-16 sm:py-20">
         <Container>
