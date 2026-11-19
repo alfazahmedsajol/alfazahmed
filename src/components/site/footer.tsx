@@ -3,6 +3,7 @@ import { Mail, Network, Phone } from "lucide-react";
 
 import { navLinks, site } from "@/data/site";
 import { services } from "@/data/services";
+import { resolvePlatform } from "./social";
 import { Container } from "./section";
 import { useQuery } from "@tanstack/react-query";
 import { settingsQuery } from "@/lib/cms";
@@ -101,9 +102,11 @@ export function Footer() {
                     href={s.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex rounded-md border border-border bg-surface px-3 py-1.5 text-xs text-muted-foreground transition-colors hover:border-primary/50 hover:text-primary"
+                    aria-label={s.platform}
+                    title={s.platform}
+                    className="flex h-9 w-9 items-center justify-center rounded-md border border-border bg-surface text-muted-foreground transition-colors hover:border-primary/50 hover:bg-primary/10 hover:text-primary"
                   >
-                    {s.platform}
+                    {(() => { const Icon = resolvePlatform(s.platform, s.url).icon; return <Icon className="h-4 w-4" aria-hidden="true" />; })()}
                   </a>
                 </li>
               ))}

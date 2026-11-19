@@ -1,3 +1,5 @@
+import { ArrowUpRight } from "lucide-react";
+import { resolvePlatform, socialHandle } from "@/components/site/social";
 import { createFileRoute } from "@tanstack/react-router";
 import { Mail, Phone, Send } from "lucide-react";
 import { useState } from "react";
@@ -215,22 +217,30 @@ function Contact() {
               {socialLinks.length > 0 && (
                 <div className="panel p-7">
                   <h2 className="text-lg font-semibold text-foreground">Social</h2>
-                  <ul className="mt-5 grid grid-cols-2 gap-3">
-                    {socialLinks.map((s) => (
-                      <li key={s.url}>
-                        <a
-                          href={s.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="block rounded-lg border border-border bg-background/60 px-4 py-3 text-sm text-foreground transition-colors hover:border-primary/50 hover:text-primary"
-                        >
-                          {s.platform}
-                          <span className="mt-1 block truncate font-mono text-[0.65rem] text-muted-foreground">
-                            {s.url.replace(/^https?:\/\/(www\.)?/, "")}
-                          </span>
-                        </a>
-                      </li>
-                    ))}
+                  <ul className="mt-5 grid gap-3 sm:grid-cols-2">
+                    {socialLinks.map((s) => {
+                      const p = resolvePlatform(s.platform, s.url);
+                      const Icon = p.icon;
+                      return (
+                        <li key={s.url}>
+                          <a
+                            href={s.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="group relative flex items-center gap-3 rounded-lg border border-border bg-background/60 px-3 py-3 transition-all hover:-translate-y-0.5 hover:border-primary/50 hover:bg-primary/5 hover:shadow-[0_0_20px_-6px_var(--color-primary)]"
+                          >
+                            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-primary/30 bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
+                              <Icon className="h-4.5 w-4.5" aria-hidden="true" />
+                            </span>
+                            <span className="min-w-0 flex-1">
+                              <span className="block text-sm font-medium text-foreground">{s.platform || p.label}</span>
+                              <span className="block truncate font-mono text-[0.68rem] text-muted-foreground">{socialHandle(s.url)}</span>
+                            </span>
+                            <ArrowUpRight className="h-4 w-4 shrink-0 text-muted-foreground opacity-0 transition-opacity group-hover:text-primary group-hover:opacity-100" aria-hidden="true" />
+                          </a>
+                        </li>
+                      );
+                    })}
                   </ul>
                 </div>
               )}

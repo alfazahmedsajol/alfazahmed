@@ -12,6 +12,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { ApiSettings } from "@/components/admin/api-settings";
 import { ChatSettings } from "@/components/admin/chat-settings";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { SOCIAL_PLATFORMS, resolvePlatform } from "@/components/site/social";
 import type { Json } from "@/integrations/supabase/types";
 
 export const Route = createFileRoute("/_authenticated/admin/settings")({
@@ -132,16 +134,18 @@ function SocialLinks() {
       return data;
     },
   });
-  const [platform, setPlatform] = useState("");
+  const [platform, setPlatform] = useState("linkedin");
+  const [custom, setCustom] = useState("");
+  const selected = SOCIAL_PLATFORMS.find((p) => p.id === platform);
   const [url, setUrl] = useState("");
   const refresh = () => { qc.invalidateQueries({ queryKey: ["admin", "social"] }); qc.invalidateQueries({ queryKey: ["public", "settings"] }); };
 
   async function add(e: React.FormEvent) {
     e.preventDefault();
     if (!/^https?:\/\//i.test(url)) { toast.error("Link must start with https://"); return; }
-    const { error } = await supabase.from("social_links").insert({ platform: platform.trim().slice(0, 40), url: url.trim(), sort_order: q.data?.length ?? 0 });
+    const { error } = await supabase.from("social_links").insert({ platform: (selected ? selected.label : custom.trim()).slice(0, 40), url: url.trim(), sort_order: q.data?.length ?? 0 });
     if (error) { toast.error(error.message); return; }
-    setPlatform(""); setUrl(""); refresh();
+    setCustom(""); setUrl(""); refresh();
   }
   async function remove(id: string) {
     const { error } = await supabase.from("social_links").delete().eq("id", id);
@@ -156,15 +160,26 @@ function SocialLinks() {
         <ul className="divide-y divide-border">
           {q.data.map((s) => (
             <li key={s.id} className="flex items-center justify-between gap-3 py-2 text-sm">
-              <span className="min-w-0 truncate"><strong>{s.platform}</strong> · <span className="text-muted-foreground">{s.url}</span></span>
+              <span className="flex min-w-0 items-center gap-2 truncate">{(() => { const Icon = resolvePlatform(s.platform, s.url).icon; return <Icon className="size-4 shrink-0 text-primary" aria-hidden="true" />; })()}<strong>{s.platform}</strong> · <span className="text-muted-foreground">{s.url}</span></span>
               <Button size="sm" variant="outline" onClick={() => remove(s.id)}>Remove</Button>
             </li>
           ))}
         </ul>
       ) : <p className="text-sm text-muted-foreground">No social links yet. The footer shows placeholders until you add some.</p>}
-      <form onSubmit={add} className="grid gap-2 sm:grid-cols-[160px_1fr_auto]">
-        <Input aria-label="Platform" placeholder="GitHub" required value={platform} onChange={(e) => setPlatform(e.target.value)} />
-        <Input aria-label="Profile URL" placeholder="https://github.com/…" required type="url" value={url} onChange={(e) => setUrl(e.target.value)} />
+      <form onSubmit={add} className="grid gap-2 sm:grid-cols-[180px_1fr_auto]">
+        <div className="space-y-2">
+          <Select value={platform} onValueChange={setPlatform}>
+            <SelectTrigger aria-label="Platform"><SelectValue /></SelectTrigger>
+            <SelectContent>
+              {SOCIAL_PLATFORMS.map((p) => { const Icon = p.icon; return (
+                <SelectItem key={p.id} value={p.id}><span className="flex items-center gap-2"><Icon className="size-4" aria-hidden="true" />{p.label}</span></SelectItem>
+              ); })}
+              <SelectItem value="other">Other / Custom</SelectItem>
+            </SelectContent>
+          </Select>
+          {!selected && <Input aria-label="Custom platform name" placeholder="Platform name" required value={custom} onChange={(e) => setCustom(e.target.value)} />}
+        </div>
+        <Input aria-label="Profile URL" placeholder={selected?.placeholder ?? "https://…"} required type="url" value={url} onChange={(e) => setUrl(e.target.value)} />
         <Button type="submit">Add</Button>
       </form>
     </section>
