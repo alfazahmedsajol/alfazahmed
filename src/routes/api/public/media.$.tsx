@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-const PUBLIC_FOLDERS = new Set(["profile", "projects", "blog", "certificates", "diagrams", "resume", "lab", "general"]);
+const PUBLIC_FOLDERS = new Set(["profile", "projects", "blog", "certificates", "diagrams", "resume", "lab", "about", "general"]);
 const PUBLIC_TYPES = new Set(["image/jpeg", "image/png", "image/webp", "image/gif", "application/pdf"]);
 const PATH_RE = /^[a-z]+\/[A-Za-z0-9._-]+$/;
 

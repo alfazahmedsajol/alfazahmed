@@ -181,3 +181,12 @@ export const labQuery = queryOptions({
     return mergeLab(data?.value);
   },
 });
+
+export const aboutQuery = queryOptions({
+  queryKey: ["public", "about"],
+  queryFn: async () => {
+    const { mergeAbout } = await import("@/data/about");
+    const { data } = await supabase.from("site_settings").select("value").eq("key", "about").maybeSingle();
+    return mergeAbout(data?.value);
+  },
+});
