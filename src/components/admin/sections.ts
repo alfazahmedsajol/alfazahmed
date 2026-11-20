@@ -161,6 +161,6 @@ export const sections: Record<string, CrudConfig> = {
 export const nav = [
   { group: "Content", items: [["blog", "Blog posts"], ["blog-categories", "Blog categories"], ["projects", "Projects"], ["project-categories", "Project categories"], ["skills", "Skills"], ["skill-categories", "Skill categories"], ["services", "Services"], ["certifications", "Certifications"], ["lab", "Lab"]] },
   { group: "Communication", items: [["messages", "Messages"]] },
-  { group: "Profile", items: [["experience", "Experience"], ["education", "Education"]] },
+  { group: "Profile", items: [["about", "About"], ["experience", "Experience"], ["education", "Education"]] },
   { group: "System", items: [["media", "Media library"], ["settings", "Site & SEO settings"]] },
 ] as const;

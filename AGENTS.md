@@ -18,3 +18,4 @@
 - Automation API: POST /api/public/v1/blog authenticates via x-api-key compared against a SHA-256 hash stored in site_settings key "api" (admin-only row); the raw key is shown once in admin and never stored.
 - Settings tabs keep their panels mounted but hide inactive panels so switching sections preserves unsaved input and one-time API key displays.
 - Lab content is stored as JSON in site_settings key "lab" (public-readable, admin-editable at /admin/lab); src/data/lab.ts supplies typed defaults merged via mergeLab() so the page never renders empty.
+- About content (text, pillars, photos with homepage flag) is JSON in site_settings key "about" (public-readable, admin-editable at /admin/about); src/data/about.ts holds defaults merged via mergeAbout().

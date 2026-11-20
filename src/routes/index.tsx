@@ -7,9 +7,11 @@ import { NetworkBackdrop } from "@/components/site/network-backdrop";
 import { Reveal } from "@/components/site/reveal";
 import { Container, DemoNotice, SectionHeading } from "@/components/site/section";
 import { useQuery } from "@tanstack/react-query";
-import { blogListQuery, certificationsQuery, projectsQuery, servicesQuery, settingsQuery, skillsQuery, toImageUrl } from "@/lib/cms";
+import { aboutQuery, blogListQuery, certificationsQuery, projectsQuery, servicesQuery, settingsQuery, skillsQuery, toImageUrl } from "@/lib/cms";
 import { useState } from "react";
 import { site, techBadges } from "@/data/site";
+import { defaultAbout } from "@/data/about";
+import { AboutPhotoGrid } from "@/components/site/about-photos";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -33,6 +35,9 @@ export const Route = createFileRoute("/")({
 });
 
 function Home() {
+  const { data: about = defaultAbout } = useQuery(aboutQuery);
+  const homePhotos = about.photos.filter((p) => p.featured).slice(0, 8);
+  const pillarIcons = { network: Network, server: Server, cpu: Cpu, award: Award };
   const { data: proj } = useQuery(projectsQuery);
   const featuredProjects = (proj?.projects ?? []).filter((p) => p.featured).slice(0, 6);
   const { data: services = [] } = useQuery(servicesQuery);
@@ -102,19 +107,15 @@ function Home() {
       {/* About preview */}
       <section className="border-b border-border py-16 sm:py-20">
         <Container>
+          {homePhotos.length ? <div className="mb-10"><AboutPhotoGrid photos={homePhotos} /></div> : null}
           <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
             <SectionHeading
               eyebrow="About"
-              title="A networking engineer who automates the repetitive parts"
-              description="I work across routing, ISP access networks, fiber delivery and Linux infrastructure — then use scripting, n8n and AI-assisted workflows to remove the manual, repetitive operations that slow teams down. Everything I build gets documented so it can be rebuilt, reviewed and handed over."
+              title={about.homeTitle}
+              description={about.homeDescription}
             />
             <Reveal delay={100} className="grid gap-4 sm:grid-cols-2">
-              {[
-                { icon: Network, title: "Networking", text: "Routing, switching, segmentation and edge security." },
-                { icon: Server, title: "Infrastructure", text: "Linux servers, monitoring and supporting services." },
-                { icon: Cpu, title: "Automation", text: "Python, APIs and n8n workflows for daily operations." },
-                { icon: Award, title: "Learning", text: "Structured certification track with hands-on labs." },
-              ].map((item) => (
+              {about.pillars.map((p) => ({ ...p, icon: pillarIcons[p.icon] ?? Network })).map((item) => (
                 <div key={item.title} className="panel p-5">
                   <item.icon className="h-5 w-5 text-primary" aria-hidden="true" />
                   <h3 className="mt-3 text-sm font-semibold text-foreground">{item.title}</h3>

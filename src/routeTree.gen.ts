@@ -30,6 +30,7 @@ import { Route as ProjectsIndexRouteImport } from './routes/projects.index'
 import { Route as ProjectsSlugRouteImport } from './routes/projects.$slug'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as AuthenticatedAdminSectionRouteImport } from './routes/_authenticated/admin.$section'
+import { Route as AuthenticatedAdminAboutRouteImport } from './routes/_authenticated/admin.about'
 import { Route as AuthenticatedAdminLabRouteImport } from './routes/_authenticated/admin.lab'
 import { Route as AuthenticatedAdminMediaRouteImport } from './routes/_authenticated/admin.media'
 import { Route as AuthenticatedAdminMessagesRouteImport } from './routes/_authenticated/admin.messages'
@@ -143,6 +144,11 @@ const AuthenticatedAdminSectionRoute =
     path: '/$section',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminAboutRoute = AuthenticatedAdminAboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
 const AuthenticatedAdminLabRoute = AuthenticatedAdminLabRouteImport.update({
   id: '/lab',
   path: '/lab',
@@ -201,6 +207,7 @@ export interface FileRoutesByFullPath {
   '/blog/': typeof BlogIndexRoute
   '/projects/': typeof ProjectsIndexRoute
   '/admin/$section': typeof AuthenticatedAdminSectionRoute
+  '/admin/about': typeof AuthenticatedAdminAboutRoute
   '/admin/lab': typeof AuthenticatedAdminLabRoute
   '/admin/media': typeof AuthenticatedAdminMediaRoute
   '/admin/messages': typeof AuthenticatedAdminMessagesRoute
@@ -229,6 +236,7 @@ export interface FileRoutesByTo {
   '/blog': typeof BlogIndexRoute
   '/projects': typeof ProjectsIndexRoute
   '/admin/$section': typeof AuthenticatedAdminSectionRoute
+  '/admin/about': typeof AuthenticatedAdminAboutRoute
   '/admin/lab': typeof AuthenticatedAdminLabRoute
   '/admin/media': typeof AuthenticatedAdminMediaRoute
   '/admin/messages': typeof AuthenticatedAdminMessagesRoute
@@ -260,6 +268,7 @@ export interface FileRoutesById {
   '/blog/': typeof BlogIndexRoute
   '/projects/': typeof ProjectsIndexRoute
   '/_authenticated/admin/$section': typeof AuthenticatedAdminSectionRoute
+  '/_authenticated/admin/about': typeof AuthenticatedAdminAboutRoute
   '/_authenticated/admin/lab': typeof AuthenticatedAdminLabRoute
   '/_authenticated/admin/media': typeof AuthenticatedAdminMediaRoute
   '/_authenticated/admin/messages': typeof AuthenticatedAdminMessagesRoute
@@ -291,6 +300,7 @@ export interface FileRouteTypes {
     | '/blog/'
     | '/projects/'
     | '/admin/$section'
+    | '/admin/about'
     | '/admin/lab'
     | '/admin/media'
     | '/admin/messages'
@@ -319,6 +329,7 @@ export interface FileRouteTypes {
     | '/blog'
     | '/projects'
     | '/admin/$section'
+    | '/admin/about'
     | '/admin/lab'
     | '/admin/media'
     | '/admin/messages'
@@ -349,6 +360,7 @@ export interface FileRouteTypes {
     | '/blog/'
     | '/projects/'
     | '/_authenticated/admin/$section'
+    | '/_authenticated/admin/about'
     | '/_authenticated/admin/lab'
     | '/_authenticated/admin/media'
     | '/_authenticated/admin/messages'
@@ -532,6 +544,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminSectionRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/about': {
+      id: '/_authenticated/admin/about'
+      path: '/about'
+      fullPath: '/admin/about'
+      preLoaderRoute: typeof AuthenticatedAdminAboutRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/lab': {
       id: '/_authenticated/admin/lab'
       path: '/lab'
@@ -586,6 +605,7 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminSectionRoute: typeof AuthenticatedAdminSectionRoute
+  AuthenticatedAdminAboutRoute: typeof AuthenticatedAdminAboutRoute
   AuthenticatedAdminLabRoute: typeof AuthenticatedAdminLabRoute
   AuthenticatedAdminMediaRoute: typeof AuthenticatedAdminMediaRoute
   AuthenticatedAdminMessagesRoute: typeof AuthenticatedAdminMessagesRoute
@@ -595,6 +615,7 @@ interface AuthenticatedAdminRouteChildren {
 
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminSectionRoute: AuthenticatedAdminSectionRoute,
+  AuthenticatedAdminAboutRoute: AuthenticatedAdminAboutRoute,
   AuthenticatedAdminLabRoute: AuthenticatedAdminLabRoute,
   AuthenticatedAdminMediaRoute: AuthenticatedAdminMediaRoute,
   AuthenticatedAdminMessagesRoute: AuthenticatedAdminMessagesRoute,

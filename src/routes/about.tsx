@@ -4,6 +4,10 @@ import { Button } from "@/components/ui/button";
 import { Reveal } from "@/components/site/reveal";
 import { Container, PageHeader, SectionHeading } from "@/components/site/section";
 import { timeline } from "@/data/resume";
+import { useQuery } from "@tanstack/react-query";
+import { aboutQuery } from "@/lib/cms";
+import { defaultAbout } from "@/data/about";
+import { AboutPhotoGrid } from "@/components/site/about-photos";
 
 export const Route = createFileRoute("/about")({
   head: () => ({
@@ -25,53 +29,23 @@ export const Route = createFileRoute("/about")({
   component: About,
 });
 
-const sections = [
-  {
-    title: "What I Do",
-    body: [
-      "I design, configure and document networks — MikroTik edges, VLAN segmentation, PPPoE subscriber access and fiber delivery — and the Linux infrastructure that supports them.",
-      "On top of that I build automation: scheduled configuration backups, API-driven changes, health checks, and workflows that turn monitoring events into clear, actionable notifications.",
-    ],
-  },
-  {
-    title: "Technical Interests",
-    body: [
-      "Service-provider scale routing, FTTH access networks and optical troubleshooting are where I spend most of my study time.",
-      "Alongside that, I'm interested in how AI can assist operations — not by configuring devices, but by making noisy machine output readable, so engineers spend less time reading logs and more time fixing causes.",
-    ],
-  },
-  {
-    title: "Career Vision",
-    body: [
-      "My goal is to work on networks where reliability is measured, not assumed: documented topologies, versioned configuration, monitoring that reflects reality and automation that removes human error from routine tasks.",
-      "I'm building toward service-provider and large infrastructure environments, with network automation as the core specialisation.",
-    ],
-  },
-  {
-    title: "Working Philosophy",
-    body: [
-      "Document before you configure. A written addressing plan and a clear intent make every later change safer.",
-      "Automate anything done more than twice. Manual repetition is where mistakes and outages come from.",
-      "Be honest about scope. I'd rather say what I'm still learning than claim experience I don't have.",
-    ],
-  },
-];
-
 function About() {
+  const { data: a = defaultAbout } = useQuery(aboutQuery);
+  const sections = a.sections;
   return (
     <>
       <PageHeader
         eyebrow="About"
-        title="Networking, infrastructure and automation — practised deliberately"
-        description="I'm Alfaz Ahmed, a network and infrastructure engineer focused on MikroTik, FTTH access networks, Linux and automation, with a growing focus on AI-assisted operations."
+        title={a.pageTitle}
+        description={a.pageDescription}
       />
 
       <section className="border-b border-border py-16 sm:py-20">
         <Container>
           <SectionHeading
             eyebrow="Introduction"
-            title="A professional introduction"
-            description="Most of my work starts the same way: understand what the network needs to deliver, write down the plan, then build it in a way that can be rebuilt. I care about configurations that another engineer can read, monitoring that supports real decisions, and automation that quietly removes daily toil."
+            title={a.introTitle}
+            description={a.introDescription}
           />
 
           <div className="mt-12 grid gap-6 md:grid-cols-2">
@@ -92,6 +66,15 @@ function About() {
           </div>
         </Container>
       </section>
+
+      {a.photos.length ? (
+        <section className="border-b border-border py-16 sm:py-20">
+          <Container>
+            <SectionHeading eyebrow="Gallery" title="Work in the field" description="Moments from sites, racks and deployments." />
+            <div className="mt-10"><AboutPhotoGrid photos={a.photos} /></div>
+          </Container>
+        </section>
+      ) : null}
 
       <section className="border-b border-border bg-surface/30 py-16 sm:py-20">
         <Container>
