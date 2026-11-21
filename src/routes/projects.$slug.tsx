@@ -1,3 +1,4 @@
+import { ReadingProgress } from "@/components/site/reading-progress";
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { ArrowLeft, ExternalLink, Github } from "lucide-react";
@@ -74,6 +75,7 @@ function ProjectDetail() {
 
   return (
     <article>
+      <ReadingProgress />
       <header className="border-b border-border bg-surface/40">
         <Container className="py-14 sm:py-20">
           <div className="max-w-3xl">

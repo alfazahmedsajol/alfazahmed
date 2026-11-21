@@ -1,4 +1,5 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { FilePlus2, FolderPlus, ImageUp, Mail } from "lucide-react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -76,7 +77,25 @@ function AdminPage() {
         <h1 className="font-display text-3xl font-semibold">Dashboard</h1>
         <Button variant="outline" onClick={logout}>Log out</Button>
       </div>
-      <div className="mt-8 grid grid-cols-2 gap-4 md:grid-cols-4">
+      <div className="mt-8 grid grid-cols-2 gap-3 md:grid-cols-4">
+        {([
+          ["/admin/$section", { section: "blog" }, "New post", FilePlus2],
+          ["/admin/$section", { section: "projects" }, "Add project", FolderPlus],
+          ["/admin/media", undefined, "Upload media", ImageUp],
+          ["/admin/messages", undefined, "Messages", Mail],
+        ] as const).map(([to, params, label, Icon]) => (
+          <Link
+            key={label}
+            to={to}
+            params={params as never}
+            className="group flex items-center gap-3 rounded-xl border border-primary/30 bg-primary/10 p-4 text-sm font-medium text-primary transition-all hover:-translate-y-0.5 hover:border-primary/60 hover:shadow-lg"
+          >
+            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground"><Icon className="h-4 w-4" /></span>
+            {label}
+          </Link>
+        ))}
+      </div>
+      <div className="mt-6 grid grid-cols-2 gap-4 md:grid-cols-4">
         {(stats.data?.cards ?? []).map(([label, n]) => (
           <div key={label} className="panel p-5">
             <p className="text-sm text-muted-foreground">{label}</p>

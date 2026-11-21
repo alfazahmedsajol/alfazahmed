@@ -159,8 +159,20 @@ export const sections: Record<string, CrudConfig> = {
 };
 
 export const nav = [
-  { group: "Content", items: [["blog", "Blog posts"], ["blog-categories", "Blog categories"], ["projects", "Projects"], ["project-categories", "Project categories"], ["skills", "Skills"], ["skill-categories", "Skill categories"], ["services", "Services"], ["certifications", "Certifications"], ["lab", "Lab"]] },
+  { group: "Content", items: [["blog", "Blog posts"], ["projects", "Projects"], ["skills", "Skills"], ["services", "Services"], ["certifications", "Certifications"], ["lab", "Lab"]] },
   { group: "Communication", items: [["messages", "Messages"]] },
   { group: "Profile", items: [["about", "About"], ["experience", "Experience"], ["education", "Education"]] },
   { group: "System", items: [["media", "Media library"], ["settings", "Site & SEO settings"]] },
 ] as const;
+
+/** Main sections and their category sub-tab, shown as tabs on both pages. */
+export const sectionTabs: Record<string, readonly [string, string][]> = (() => {
+  const pairs: [string, string, string, string][] = [
+    ["blog", "Blog posts", "blog-categories", "Categories"],
+    ["projects", "Projects", "project-categories", "Categories"],
+    ["skills", "Skills", "skill-categories", "Categories"],
+  ];
+  const out: Record<string, [string, string][]> = {};
+  for (const [a, al, b, bl] of pairs) out[a] = out[b] = [[a, al], [b, bl]];
+  return out;
+})();

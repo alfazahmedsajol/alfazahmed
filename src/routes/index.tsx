@@ -57,6 +57,13 @@ function Home() {
         <Container className="relative py-16 sm:py-24 lg:py-28">
           <div className="grid items-center gap-12 lg:grid-cols-[1.15fr_0.85fr]">
             <Reveal>
+              <p className="mb-5 inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 font-mono text-[0.7rem] uppercase tracking-[0.16em] text-primary">
+                <span className="relative flex h-2 w-2">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-60" />
+                  <span className="relative inline-flex h-2 w-2 rounded-full bg-primary" />
+                </span>
+                Available for networking &amp; automation work
+              </p>
               <p className="font-mono text-xs uppercase tracking-[0.22em] text-primary">
                 {site.brand}
               </p>
