@@ -2,12 +2,12 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, Award, FlaskConical, Cpu, Network, Server, User } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { BlogCard, ProjectCard, TagChip } from "@/components/site/cards";
+import { ProjectCard, TagChip } from "@/components/site/cards";
 import { NetworkBackdrop } from "@/components/site/network-backdrop";
 import { Reveal } from "@/components/site/reveal";
 import { Container, DemoNotice, SectionHeading } from "@/components/site/section";
 import { useQuery } from "@tanstack/react-query";
-import { aboutQuery, blogListQuery, certificationsQuery, projectsQuery, servicesQuery, settingsQuery, skillsQuery, toImageUrl } from "@/lib/cms";
+import { aboutQuery, projectsQuery, settingsQuery, toImageUrl } from "@/lib/cms";
 import { useState } from "react";
 import { site, techBadges } from "@/data/site";
 import { defaultAbout } from "@/data/about";
@@ -39,16 +39,7 @@ function Home() {
   const homePhotos = about.photos.filter((p) => p.featured).slice(0, 8);
   const pillarIcons = { network: Network, server: Server, cpu: Cpu, award: Award };
   const { data: proj } = useQuery(projectsQuery);
-  const featuredProjects = (proj?.projects ?? []).filter((p) => p.featured).slice(0, 6);
-  const { data: services = [] } = useQuery(servicesQuery);
-  const { data: blog } = useQuery(blogListQuery);
-  const { data: certifications = [] } = useQuery(certificationsQuery);
-  const { data: skillCats = [] } = useQuery(skillsQuery);
-  const allSkills = skillCats.flatMap((c) => c.skills);
-  const featuredSkills = allSkills.filter((s) => s.featured);
-  const coreSkills = [...featuredSkills, ...allSkills.filter((s) => !s.featured)].slice(0, 10).map((s) => s.name);
-  const homeServices = (services.some((s) => s.featured) ? services.filter((s) => s.featured) : services).slice(0, 6);
-  const homeCerts = (certifications.some((c) => c.featured) ? certifications.filter((c) => c.featured) : certifications).slice(0, 3);
+  const featuredProjects = (proj?.projects ?? []).filter((p) => p.featured).slice(0, 3);
   return (
     <>
       {/* Hero */}
@@ -92,9 +83,6 @@ function Home() {
                 <Button asChild size="lg" variant="outline">
                   <Link to="/contact">Contact Me</Link>
                 </Button>
-                <Button asChild size="lg" variant="ghost">
-                  <Link to="/blog">Read My Blog</Link>
-                </Button>
               </div>
             </Reveal>
 
@@ -135,36 +123,6 @@ function Home() {
             <Button asChild variant="outline">
               <Link to="/about">
                 Read More <ArrowRight className="ml-1.5 h-4 w-4" aria-hidden="true" />
-              </Link>
-            </Button>
-          </Reveal>
-        </Container>
-      </section>
-
-      {/* Core skills */}
-      <section className="border-b border-border bg-surface/30 py-16 sm:py-20">
-        <Container>
-          <SectionHeading
-            eyebrow="Skills"
-            title="The technologies I work with every week"
-            description="Each area below has its own breakdown on the skills page."
-          />
-          <Reveal className="mt-10">
-            <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
-              {coreSkills.map((s) => (
-                <li
-                  key={s}
-                  className="panel panel-hover flex items-center justify-center px-4 py-5 text-center text-sm font-medium text-foreground"
-                >
-                  {s}
-                </li>
-              ))}
-            </ul>
-          </Reveal>
-          <Reveal className="mt-8">
-            <Button asChild variant="ghost">
-              <Link to="/skills">
-                Explore all skills <ArrowRight className="ml-1.5 h-4 w-4" aria-hidden="true" />
               </Link>
             </Button>
           </Reveal>
@@ -217,109 +175,6 @@ function Home() {
               </div>
               <span className="inline-flex items-center text-sm font-medium text-primary">Explore the lab <ArrowRight className="ml-1.5 h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden="true" /></span>
             </Link>
-          </Reveal>
-        </Container>
-      </section>
-
-      {/* Services */}
-      <section className="border-b border-border bg-surface/30 py-16 sm:py-20">
-        <Container>
-          <SectionHeading
-            eyebrow="Services"
-            title="How I can help"
-            description="From router configuration to automated operations, with documentation included."
-          />
-          <div className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {homeServices.map((s, i) => (
-              <Reveal key={s.id} delay={i * 60}>
-                <article className="panel panel-hover h-full p-6">
-                  <h3 className="text-base font-semibold text-foreground">{s.title}</h3>
-                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{s.description}</p>
-                  <ul className="mt-5 flex flex-wrap gap-2">
-                    {(s.technologies ?? []).map((t) => (
-                      <li key={t}>
-                        <TagChip>{t}</TagChip>
-                      </li>
-                    ))}
-                  </ul>
-                </article>
-              </Reveal>
-            ))}
-          </div>
-          <Reveal className="mt-10">
-            <Button asChild variant="outline">
-              <Link to="/services">
-                See service details <ArrowRight className="ml-1.5 h-4 w-4" aria-hidden="true" />
-              </Link>
-            </Button>
-          </Reveal>
-        </Container>
-      </section>
-
-      {/* Blog */}
-      <section className="border-b border-border py-16 sm:py-20">
-        <Container>
-          <SectionHeading
-            eyebrow="Blog"
-            title="Latest technical writing"
-            description="Notes from labs, configuration decisions and automation experiments."
-          />
-          <div className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {[
-              ...(blog?.posts ?? []).filter((p) => p.featured).sort((a, b) => a.sortOrder - b.sortOrder),
-              ...(blog?.posts ?? []).filter((p) => !p.featured),
-            ].slice(0, 3).map((p, i) => (
-              <Reveal key={p.slug} delay={i * 70}>
-                <BlogCard post={p} />
-              </Reveal>
-            ))}
-          </div>
-          <Reveal className="mt-10">
-            <Button asChild variant="outline">
-              <Link to="/blog">
-                Read the blog <ArrowRight className="ml-1.5 h-4 w-4" aria-hidden="true" />
-              </Link>
-            </Button>
-          </Reveal>
-        </Container>
-      </section>
-
-      {/* Certifications */}
-      <section className="border-b border-border bg-surface/30 py-16 sm:py-20">
-        <Container>
-          <div className="flex flex-wrap items-end justify-between gap-6">
-            <SectionHeading
-              eyebrow="Certifications"
-              title="Certification track"
-              description="Study progress, honestly labeled — nothing listed as achieved unless it is."
-            />
-            <Reveal delay={80}>
-              <DemoNotice>Status reflects study intent, not awarded credentials</DemoNotice>
-            </Reveal>
-          </div>
-          <div className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {homeCerts.map((c, i) => (
-              <Reveal key={c.id} delay={i * 70}>
-                <article className="panel panel-hover h-full p-6">
-                  <div className="flex items-center justify-between gap-3">
-                    <span className="font-mono text-[0.68rem] uppercase tracking-[0.18em] text-primary">
-                      {c.status}
-                    </span>
-                    <span className="font-mono text-[0.68rem] text-muted-foreground">{c.issued_on?.slice(0, 4) ?? ""}</span>
-                  </div>
-                  <h3 className="mt-4 text-base font-semibold text-foreground">{c.name}</h3>
-                  <p className="mt-1 text-sm text-muted-foreground">{c.issuer}</p>
-                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{c.description}</p>
-                </article>
-              </Reveal>
-            ))}
-          </div>
-          <Reveal className="mt-10">
-            <Button asChild variant="outline">
-              <Link to="/certifications">
-                All certifications <ArrowRight className="ml-1.5 h-4 w-4" aria-hidden="true" />
-              </Link>
-            </Button>
           </Reveal>
         </Container>
       </section>
