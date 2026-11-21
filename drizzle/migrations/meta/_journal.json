@@ -64,6 +64,13 @@
       "when": 1795080191872,
       "tag": "0008_about_public_read",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1795256939296,
+      "tag": "0009_has_role_self_only",
+      "breakpoints": true
     }
   ]
 }

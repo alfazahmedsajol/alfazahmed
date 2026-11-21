@@ -28,6 +28,22 @@ function extractReply(data: unknown): string | null {
   return null;
 }
 
+function sameOrigin(request: Request): boolean {
+  const origin = request.headers.get("origin");
+  if (!origin) return false;
+  try { return new URL(origin).host === new URL(request.url).host; } catch { return false; }
+}
+
+const hits = new Map<string, number[]>();
+function throttled(key: string): boolean {
+  const now = Date.now();
+  const recent = (hits.get(key) ?? []).filter((t) => now - t < 60_000);
+  recent.push(now);
+  hits.set(key, recent);
+  if (hits.size > 5000) hits.clear();
+  return recent.length > 10;
+}
+
 export const Route = createFileRoute("/api/public/chat")({
   server: {
     handlers: {
@@ -39,6 +55,9 @@ export const Route = createFileRoute("/api/public/chat")({
           { headers: { "Cache-Control": "no-store" } });
       },
       POST: async ({ request }) => {
+        if (!sameOrigin(request)) return Response.json({ error: "Forbidden" }, { status: 403 });
+        const ip = request.headers.get("cf-connecting-ip") ?? request.headers.get("x-forwarded-for") ?? "anon";
+        if (throttled(ip)) return Response.json({ error: "Too many messages — please wait a moment." }, { status: 429 });
         const c = await loadCfg();
         if (!c.enabled || !c.webhook_url) return Response.json({ error: "Chat is offline" }, { status: 403 });
         let raw: unknown;
