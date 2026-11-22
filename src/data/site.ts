@@ -32,7 +32,6 @@ export const navLinks = [
   { label: "Services", to: "/services" },
   { label: "Blog", to: "/blog" },
   { label: "Certifications", to: "/certifications" },
-  { label: "Contact", to: "/contact" },
 ] as const;
 
 export const socials = [

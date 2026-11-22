@@ -1,8 +1,9 @@
 import { Link } from "@tanstack/react-router";
-import { Menu, Network, X } from "lucide-react";
+import { Menu, Network, User, X } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { settingsQuery, toImageUrl } from "@/lib/cms";
 import { useEffect, useState } from "react";
 
-import { Button } from "@/components/ui/button";
 import { navLinks, site } from "@/data/site";
 import { Container } from "./section";
 import { ThemeToggle } from "./theme-toggle";
@@ -76,9 +77,7 @@ export function Navbar() {
           <ThemeToggle className="ml-auto xl:ml-0" />
 
           <div className="hidden xl:block">
-            <Button asChild>
-              <Link to="/contact">Let&apos;s Work Together</Link>
-            </Button>
+            <AuditButton />
           </div>
 
           <button
@@ -115,14 +114,32 @@ export function Navbar() {
                 {link.label}
               </Link>
             ))}
-            <Button asChild size="lg" className="mt-4">
-              <Link to="/contact" onClick={() => setOpen(false)}>
-                Let&apos;s Work Together
-              </Link>
-            </Button>
+            <AuditButton className="mt-4 self-start" onClick={() => setOpen(false)} />
           </nav>
         </div>
       ) : null}
     </>
+  );
+}
+
+function AuditButton({ className = "", onClick }: { className?: string; onClick?: () => void }) {
+  const { data } = useQuery(settingsQuery);
+  const [failed, setFailed] = useState(false);
+  const src = toImageUrl(data?.general?.["profile_image"]);
+  return (
+    <Link
+      to="/contact"
+      onClick={onClick}
+      className={`group inline-flex items-center gap-2.5 rounded-full bg-primary py-1.5 pl-1.5 pr-5 text-sm font-semibold text-primary-foreground shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary/30 ${className}`}
+    >
+      <span className="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-primary-foreground/30 bg-background">
+        {src && !failed ? (
+          <img src={src} alt="" referrerPolicy="no-referrer" onError={() => setFailed(true)} className="h-full w-full object-cover" />
+        ) : (
+          <User className="h-4 w-4 text-primary" aria-hidden="true" />
+        )}
+      </span>
+      Get a Free Network Audit
+    </Link>
   );
 }
