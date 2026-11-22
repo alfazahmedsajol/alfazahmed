@@ -130,7 +130,7 @@ function AuditButton({ className = "", onClick }: { className?: string; onClick?
     <Link
       to="/contact"
       onClick={onClick}
-      className={`group inline-flex items-center gap-2.5 rounded-full bg-primary py-1.5 pl-1.5 pr-5 text-sm font-semibold text-primary-foreground shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary/30 ${className}`}
+      className={`group inline-flex shrink-0 items-center gap-2 whitespace-nowrap rounded-full bg-primary py-1.5 pl-1.5 pr-4 text-sm font-semibold text-primary-foreground shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary/30 ${className}`}
     >
       <span className="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-primary-foreground/30 bg-background">
         {src && !failed ? (
