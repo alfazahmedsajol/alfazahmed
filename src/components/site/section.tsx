@@ -11,8 +11,8 @@ export function Container({ children, className }: { children: ReactNode; classN
 
 export function Eyebrow({ children }: { children: ReactNode }) {
   return (
-    <span className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3.5 py-1.5 font-mono text-xs font-semibold uppercase tracking-[0.2em] text-primary shadow-[0_0_18px_-6px_var(--color-primary)] sm:text-[0.8rem]">
-      <span aria-hidden="true" className="h-1.5 w-1.5 animate-pulse rounded-full bg-primary" />
+    <span className="inline-flex items-center gap-2 font-editorial text-base italic text-primary sm:text-lg">
+      <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-primary" />
       {children}
     </span>
   );
@@ -40,9 +40,9 @@ export function SectionHeading({
       )}
     >
       {eyebrow ? <Eyebrow>{eyebrow}</Eyebrow> : null}
-      <h2 className="mt-4 text-3xl font-semibold text-foreground sm:text-4xl">{title}</h2>
+      <h2 className="mt-3 text-4xl text-foreground sm:text-5xl lg:text-6xl">{title}</h2>
       {description ? (
-        <p className="mt-4 text-base leading-relaxed text-muted-foreground">{description}</p>
+        <p className="mt-5 font-editorial text-lg leading-relaxed text-muted-foreground sm:text-xl">{description}</p>
       ) : null}
     </Reveal>
   );
@@ -62,8 +62,8 @@ export function PageHeader({
       <Container className="py-14 sm:py-20">
         <Reveal className="max-w-3xl">
           <Eyebrow>{eyebrow}</Eyebrow>
-          <h1 className="mt-4 text-4xl font-semibold text-foreground sm:text-5xl">{title}</h1>
-          <p className="mt-5 text-base leading-relaxed text-muted-foreground sm:text-lg">
+          <h1 className="mt-3 text-5xl text-foreground sm:text-6xl lg:text-7xl">{title}</h1>
+          <p className="mt-6 font-editorial text-lg leading-relaxed text-muted-foreground sm:text-xl">
             {description}
           </p>
         </Reveal>

@@ -57,6 +57,8 @@
   --color-sidebar-ring: var(--sidebar-ring);
   --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
   --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-impact: "Anton", "Bebas Neue", Impact, sans-serif;
+  --font-editorial: "Newsreader", Georgia, serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
 }
 
@@ -205,6 +207,15 @@
   h4 {
     font-family: var(--font-display);
     letter-spacing: -0.02em;
+  }
+
+  h1,
+  h2 {
+    font-family: var(--font-impact);
+    font-weight: 400 !important;
+    text-transform: uppercase;
+    letter-spacing: 0.005em;
+    line-height: 0.98 !important;
   }
 
   :focus-visible {

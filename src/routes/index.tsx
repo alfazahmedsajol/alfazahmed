@@ -61,12 +61,12 @@ function Home() {
               <p className="mt-2 font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground">
                 {site.byline}
               </p>
-              <h1 className="mt-6 text-4xl font-semibold leading-[1.1] text-foreground sm:text-5xl lg:text-6xl">
+              <h1 className="mt-6 text-5xl text-foreground sm:text-6xl lg:text-7xl">
                 Building Smarter Networks.
                 <br />
                 <span className="text-signal">Automating Infrastructure.</span>
               </h1>
-              <p className="mt-6 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
+              <p className="mt-6 max-w-xl font-editorial text-lg leading-relaxed text-muted-foreground sm:text-xl">
                 {site.heroSupport}
               </p>
               <ul className="mt-8 flex flex-wrap gap-2">
