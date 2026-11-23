@@ -16,13 +16,13 @@ import { AboutPhotoGrid } from "@/components/site/about-photos";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "AI-Powered Networking & Automation — Alfaz Ahmed" },
+      { title: "Alfaz Ahmed — AI-Powered Networking & Automation" },
       {
         name: "description",
         content:
           "Building smarter networks and automating infrastructure. Networking, MikroTik, FTTH, Linux and AI automation work by Alfaz Ahmed.",
       },
-      { property: "og:title", content: "AI-Powered Networking & Automation — Alfaz Ahmed" },
+      { property: "og:title", content: "Alfaz Ahmed — AI-Powered Networking & Automation" },
       {
         property: "og:description",
         content:

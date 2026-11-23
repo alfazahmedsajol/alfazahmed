@@ -53,7 +53,7 @@ export function Navbar() {
             </Link>
           </div>
 
-          <nav aria-label="Main" className="hidden items-center gap-1 xl:flex">
+          <nav aria-label="Main" className="hidden flex-1 items-center justify-center gap-1 xl:flex">
             {navLinks.map((link) => (
               <Link
                 key={link.to}
@@ -66,7 +66,7 @@ export function Navbar() {
             ))}
           </nav>
 
-          <div className="ml-auto hidden xl:block">
+          <div className="hidden shrink-0 xl:block">
             <AuditButton />
           </div>
 
