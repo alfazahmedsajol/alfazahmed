@@ -1,12 +1,12 @@
 import { Link } from "@tanstack/react-router";
-import { Menu, Network, User, X } from "lucide-react";
+import { Menu, User, X } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { settingsQuery, toImageUrl } from "@/lib/cms";
 import { useEffect, useState } from "react";
 
 import { navLinks, site } from "@/data/site";
 import { Container } from "./section";
-import { ThemeToggle } from "./theme-toggle";
+import { ThemeLogoButton } from "./theme-toggle";
 
 export function Navbar() {
   const [open, setOpen] = useState(false);
@@ -42,30 +42,22 @@ export function Navbar() {
           Skip to content
         </a>
         <Container className="flex h-16 items-center justify-between gap-4 lg:h-20">
-          <Link
-            to="/"
-            className="group flex min-w-0 items-center gap-3"
-            aria-label={`${site.brand}, home`}
-          >
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-border bg-surface text-primary transition-colors group-hover:border-primary/50">
-              <Network className="h-4.5 w-4.5" aria-hidden="true" />
-            </span>
-            <span className="min-w-0 leading-tight">
-              <span className="block truncate font-display text-[0.8rem] font-semibold text-foreground sm:text-[0.95rem]">
-                AI-Powered Networking &amp; Automation
-              </span>
-              <span className="block font-mono text-[0.68rem] uppercase tracking-[0.18em] text-muted-foreground">
-                {site.byline}
-              </span>
-            </span>
-          </Link>
+          <div className="flex min-w-0 items-center gap-3">
+            <ThemeLogoButton />
+            <Link
+              to="/"
+              className="truncate font-display text-[0.95rem] font-semibold text-foreground transition-colors hover:text-primary sm:text-base"
+              aria-label={`${site.owner}, home`}
+            >
+              {site.owner}
+            </Link>
+          </div>
 
           <nav aria-label="Main" className="hidden items-center gap-1 xl:flex">
             {navLinks.map((link) => (
               <Link
                 key={link.to}
                 to={link.to}
-                activeOptions={{ exact: link.to === "/" }}
                 className="rounded-md px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-surface hover:text-foreground"
                 activeProps={{ className: "text-primary" }}
               >
@@ -74,9 +66,7 @@ export function Navbar() {
             ))}
           </nav>
 
-          <ThemeToggle className="ml-auto xl:ml-0" />
-
-          <div className="hidden xl:block">
+          <div className="ml-auto hidden xl:block">
             <AuditButton />
           </div>
 
@@ -86,7 +76,7 @@ export function Navbar() {
             aria-expanded={open}
             aria-controls="mobile-nav"
             aria-label={open ? "Close menu" : "Open menu"}
-            className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-border bg-surface text-foreground xl:hidden"
+            className="ml-auto inline-flex h-10 w-10 items-center justify-center rounded-md border border-border bg-surface text-foreground xl:ml-0 xl:hidden"
           >
             {open ? (
               <X className="h-5 w-5" aria-hidden="true" />
@@ -106,7 +96,6 @@ export function Navbar() {
               <Link
                 key={link.to}
                 to={link.to}
-                activeOptions={{ exact: link.to === "/" }}
                 onClick={() => setOpen(false)}
                 className="rounded-lg border border-transparent px-4 py-3 text-base text-muted-foreground transition-colors hover:border-border hover:bg-surface hover:text-foreground"
                 activeProps={{ className: "border-border bg-surface text-primary" }}
